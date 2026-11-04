@@ -244,7 +244,7 @@ audio{width:100%}
       $('pic').innerHTML = ''; $('pic').appendChild(im); $('zImg').src = r.photo; if (r.rot) $('zImg').style.transform = im.style.transform;
     } else { $('picMsg').textContent = 'There is no picture for this item, but you can still record.'; $('pic').style.cursor = 'default'; }
     var saved = ''; try { saved = localStorage.getItem('ppRecWho') || ''; } catch (_) { }
-    $('who').value = r.who || saved;
+    $('who').value = r.who || saved; if (r.name) $('nm').value = r.name;
     show('start');
     if (!pickType() && !window.MediaRecorder) fail('This browser cannot record. Please open this link in Chrome, Edge, Firefox or Safari.');
   }).catch(function (x) { $('picMsg').textContent = ''; $('ttl').textContent = 'The recorder could not open'; fail(x.message); });

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install Phoenix Photo</title>
+<link rel="icon" href="../phoenix-icon-192.png">
+<meta name="description" content="Set up your own Phoenix Photo archive in your Google account, in about 15 minutes.">
+<style>
+:root{--bg:#0d1526;--panel:#16213a;--panel2:#0b1220;--line:#2a3a5e;--ink:#eef2f9;--mute:#a9b8d6;--blue:#3d7bff;--gold:#d4a64a;--warn:#ffcf70}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:#10141c}
+body{margin:0;background:linear-gradient(165deg,#0b1d3b 0%,#0d1526 45%,#10141c 100%);min-height:100vh;color:var(--ink);font:17px/1.6 Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:#8fb3ff}
+.wrap{max-width:820px;margin:0 auto;padding:0 16px}
+header{padding:28px 0 8px;display:flex;align-items:center;gap:16px}
+header img{width:72px;height:72px;border-radius:16px;flex:none}
+.wm{font-weight:800;font-size:26px;letter-spacing:-.01em}.wm i{font-style:normal;color:#6f9bff}
+.tl{color:var(--mute);font-style:italic;font-size:15px}
+h1{font-size:34px;line-height:1.2;margin:22px 0 6px}
+.lead{color:var(--mute);font-size:18px;margin:0 0 18px}
+hr.gold{border:0;border-top:2px solid var(--gold);opacity:.55;margin:18px 0 24px}
+.need{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 28px}
+.need div{background:rgba(22,33,58,.85);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.need b{display:block;font-size:20px}.need span{color:var(--mute);font-size:14px}
+ol.steps{list-style:none;margin:0;padding:0;counter-reset:s;display:flex;flex-direction:column;gap:16px}
+ol.steps>li{counter-increment:s;background:rgba(22,33,58,.85);border:1px solid var(--line);border-radius:16px;padding:20px 20px 20px 72px;position:relative}
+ol.steps>li::before{content:counter(s);position:absolute;left:20px;top:20px;width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;display:grid;place-items:center}
+ol.steps h2{font-size:20px;margin:4px 0 6px}
+ol.steps p{margin:6px 0}
+.ui{display:inline-block;background:#24324f;border:1px solid #3d5a99;border-radius:6px;padding:0 7px;font-size:15px;white-space:nowrap}
+.fig{margin:14px 0 4px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;overflow:hidden}
+.fig svg{display:block;width:100%;height:auto;max-width:520px}
+.note{border-left:3px solid var(--warn);background:rgba(255,207,112,.07);padding:10px 14px;border-radius:0 10px 10px 0;margin:10px 0;font-size:15.5px}
+.btn{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;font-weight:700;padding:12px 20px;border-radius:10px;margin:8px 0}
+.btn.off{background:#3a4560;color:#c9d2e6;cursor:default}
+section.more{margin:30px 0}
+section.more h2{font-size:22px;margin:0 0 8px}
+footer{color:var(--mute);font-size:14px;padding:30px 0 40px;border-top:1px solid var(--line);margin-top:30px}
+@media (max-width:640px){h1{font-size:28px}.need{grid-template-columns:1fr}ol.steps>li{padding:18px 16px 18px 60px}ol.steps>li::before{left:14px;top:18px}}
+@media print{body{background:#fff;color:#111}.need div,ol.steps>li,.fig{background:#fff;border-color:#bbb}.lead,.need span,.tl,footer{color:#444}a{color:#0b3fbf}.ui{background:#eef2fb;border-color:#9fb4e6;color:#111}ol.steps>li{break-inside:avoid}.btn{display:none}.note{background:#fff8e5}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><img src="../phoenix-icon-192.png" alt=""><div><div class="wm">Phoenix<i>Photo</i></div><div class="tl">Every photo has a story.</div></div></header>
+
+<h1>Set up your own Phoenix Photo</h1>
+<p class="lead">Your photos, stories and recordings stay in your own Google account. Nobody else can see them unless you share them. New versions arrive by themselves.</p>
+<hr class="gold">
+
+<div class="need">
+  <div><b>A Google account</b><span>Gmail or Google Workspace</span></div>
+  <div><b>About 15 minutes</b><span>Once. Updates are automatic after that.</span></div>
+  <div><b>A computer</b><span>for setup. Phones work fine after that.</span></div>
+</div>
+
+<ol class="steps">
+<li><h2>Make your own copy</h2>
+  <p>Open the Phoenix Photo template while you're signed in to Google. On the left, click <span class="ui">ⓘ Overview</span>, then <span class="ui">⧉ Make a copy</span> at the top right.</p>
+  <p id="tplBox"><a class="btn off" id="tpl" aria-disabled="true">Template link coming soon</a></p>
+  <div class="fig" aria-hidden="true"><svg viewBox="0 0 520 150"><rect x="1" y="1" width="518" height="148" rx="10" fill="#101a2e" stroke="#2a3a5e"/><rect x="14" y="16" width="120" height="118" rx="8" fill="#16213a"/><text x="28" y="44" fill="#a9b8d6" font-size="14" font-family="Arial">ⓘ Overview</text><rect x="20" y="28" width="108" height="24" rx="6" fill="none" stroke="#d4a64a" stroke-width="2"/><text x="28" y="74" fill="#6b7a99" font-size="14" font-family="Arial">‹› Editor</text><text x="28" y="100" fill="#6b7a99" font-size="14" font-family="Arial">⏱ Triggers</text><text x="160" y="44" fill="#eef2f9" font-size="16" font-family="Arial" font-weight="bold">Phoenix Photo</text><rect x="380" y="24" width="122" height="30" rx="7" fill="#3d7bff"/><text x="395" y="44" fill="#fff" font-size="14" font-family="Arial">⧉ Make a copy</text><path d="M440 72 L440 60" stroke="#d4a64a" stroke-width="3"/><path d="M432 66 L440 56 L448 66" fill="none" stroke="#d4a64a" stroke-width="3"/></svg></div>
+</li>
+<li><h2>Name it</h2>
+  <p>Your copy opens. Click its name at the top (it says <span class="ui">Copy of Phoenix Photo</span>) and change it to <b>Phoenix Photo</b>.</p>
+</li>
+<li><h2>Publish it as a web app</h2>
+  <p>Click the blue <span class="ui">Deploy</span> button, then <span class="ui">New deployment</span>. Click the gear next to "Select type" and choose <span class="ui">Web app</span>. Set:</p>
+  <p><b>Execute as:</b> <span class="ui">Me</span><br><b>Who has access:</b> <span class="ui">Anyone</span></p>
+  <p>Then click <span class="ui">Deploy</span>. "Anyone" lets family and contributors open your pages without a Google account. Your archive still asks each person to sign in or use a passcode.</p>
+  <div class="fig" aria-hidden="true"><svg viewBox="0 0 520 170"><rect x="1" y="1" width="518" height="168" rx="10" fill="#101a2e" stroke="#2a3a5e"/><text x="20" y="34" fill="#eef2f9" font-size="16" font-family="Arial" font-weight="bold">New deployment</text><text x="20" y="66" fill="#a9b8d6" font-size="13" font-family="Arial">Select type</text><rect x="120" y="50" width="130" height="26" rx="6" fill="#16213a" stroke="#3d5a99"/><text x="132" y="68" fill="#eef2f9" font-size="13" font-family="Arial">⚙ Web app</text><text x="20" y="102" fill="#a9b8d6" font-size="13" font-family="Arial">Execute as</text><rect x="120" y="86" width="130" height="26" rx="6" fill="#16213a" stroke="#d4a64a" stroke-width="2"/><text x="132" y="104" fill="#eef2f9" font-size="13" font-family="Arial">Me</text><text x="20" y="138" fill="#a9b8d6" font-size="13" font-family="Arial">Who has access</text><rect x="120" y="122" width="130" height="26" rx="6" fill="#16213a" stroke="#d4a64a" stroke-width="2"/><text x="132" y="140" fill="#eef2f9" font-size="13" font-family="Arial">Anyone</text><rect x="400" y="122" width="100" height="30" rx="7" fill="#3d7bff"/><text x="425" y="142" fill="#fff" font-size="14" font-family="Arial">Deploy</text></svg></div>
+</li>
+<li><h2>Allow access</h2>
+  <p>Google asks you to allow Phoenix Photo to use your Drive, Sheets and email. Click <span class="ui">Authorize access</span> and choose your account.</p>
+  <p>You'll then see <b>"Google hasn't verified this app"</b>. Click <span class="ui">Advanced</span>, then <span class="ui">Go to Phoenix Photo (unsafe)</span>, then <span class="ui">Allow</span>.</p>
+  <div class="note">Why the warning? This copy belongs to you and runs only in your account, so Google shows it for any script that someone sets up for themselves. Phoenix Photo can only reach what's in your own Google account, and it never sends your photos anywhere.</div>
+  <div class="fig" aria-hidden="true"><svg viewBox="0 0 520 150"><rect x="1" y="1" width="518" height="148" rx="10" fill="#f4f6fa" stroke="#c9d1df"/><text x="22" y="38" fill="#1f2937" font-size="16" font-family="Arial" font-weight="bold">Google hasn't verified this app</text><text x="22" y="62" fill="#4b5563" font-size="13" font-family="Arial">The app is requesting access to your Google Account…</text><text x="22" y="104" fill="#1a56db" font-size="14" font-family="Arial">Advanced</text><rect x="14" y="88" width="80" height="24" rx="5" fill="none" stroke="#d4a64a" stroke-width="2"/><text x="22" y="134" fill="#1a56db" font-size="14" font-family="Arial">Go to Phoenix Photo (unsafe)</text><rect x="14" y="118" width="208" height="24" rx="5" fill="none" stroke="#d4a64a" stroke-width="2"/><rect x="390" y="92" width="110" height="30" rx="15" fill="#1a56db"/><text x="408" y="112" fill="#fff" font-size="13" font-family="Arial">Back to safety</text></svg></div>
+  <p class="note">Using a work or school Google account? Your administrator may need to allow apps like this first.</p>
+</li>
+<li><h2>Finish setup in your browser</h2>
+  <p>Google shows the <b>Web app</b> link. Copy it and open it in your browser. Type a name for your archive (for example, "The Smith family photos") and your name, then click <span class="ui">Set up Phoenix Photo</span>. It takes about a minute.</p>
+  <p>Signed in to more than one Google account? Open the link in a private (Incognito) window and sign in with only the account that made the copy.</p>
+</li>
+<li><h2>Bookmark it and add it to your phone</h2>
+  <p>The last screen shows three links: the <b>Library</b> (for you and your helpers), the <b>Family view</b>, and the <b>Submissions page</b> with its passcode. Bookmark the Library. To put Phoenix Photo on your phone or desktop, open the Library and go to <span class="ui">Settings › Links &amp; app icon</span>.</p>
+</li>
+</ol>
+
+<section class="more"><h2>Keeping it up to date</h2>
+<p>Nothing to do. Every night your copy checks for a new version, makes sure it really comes from the publisher, and installs it. You get a short email when it updates. If something isn't right, <span class="ui">Settings › Updates › Go back</span> returns to the version before.</p>
+<p>Once in a while a new version needs a new <b>Code.gs</b>. If so, Phoenix Photo emails you the steps, and everything keeps working on the current version until you do it.</p></section>
+
+<section class="more"><h2>Getting help</h2>
+<p>In the Library, open <span class="ui">Settings › Updates › Send a problem report</span>. It sends a short note with the version and any error messages, never your photos.</p></section>
+
+<section class="more"><h2>Your photos are yours</h2>
+<p>Everything lives in a <b>Phoenix Photo</b> folder in your Google Drive, as ordinary files. <span class="ui">Settings › Storage &amp; import › Save a full copy</span> saves all the information into one Google Sheet. To keep a copy off Google, use <a href="https://takeout.google.com" target="_blank" rel="noopener">Google Takeout</a>.</p></section>
+
+<footer>Phoenix Photo · Every photo has a story. · Print this page for a two-page handout.</footer>
+</div>
+<script>
+var TEMPLATE_URL = '';
+if (TEMPLATE_URL) { var a = document.getElementById('tpl'); a.href = TEMPLATE_URL; a.target = '_blank'; a.rel = 'noopener'; a.className = 'btn'; a.removeAttribute('aria-disabled'); a.textContent = 'Open the Phoenix Photo template'; }
+</script>
+</body>
+</html>

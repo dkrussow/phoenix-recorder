@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Opening Phoenix Photo</title>
+<link rel="icon" href="../phoenix-icon-192.png">
+<link rel="apple-touch-icon" href="../phoenix-icon-192.png">
+<style>
+:root{--bg:#0d1526;--panel:#16213a;--line:#2a3a5e;--ink:#eef2f9;--mute:#a9b8d6;--blue:#3d7bff}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(165deg,#0b1d3b 0%,#0d1526 60%);color:var(--ink);font:17px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:440px;width:100%;padding:24px 16px;text-align:center}
+img{width:84px;height:84px;border-radius:18px}
+h1{font-size:22px;margin:14px 0 6px}
+p{color:var(--mute);margin:8px 0}
+.btn{display:inline-block;margin:10px 0;background:var(--blue);color:#fff;font-weight:700;font-size:18px;padding:14px 22px;border-radius:12px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn.sec{background:var(--panel);border:1px solid var(--line);font-size:15px;padding:10px 16px}
+.link{word-break:break-all;font-size:13px;color:var(--mute);background:#0b1220;border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:6px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <img src="../phoenix-icon-192.png" alt="">
+  <h1 id="h">Opening Phoenix Photo…</h1>
+  <p id="msg">One moment.</p>
+  <div id="help" hidden>
+    <a class="btn" id="chrome" href="#">Open in Chrome</a>
+    <p>If that doesn't work, copy this link and paste it into Chrome's address bar:</p>
+    <div class="link" id="url"></div>
+    <button class="btn sec" id="copy" type="button">Copy the link</button>
+  </div>
+  <a class="btn" id="go" href="#" hidden>Open Phoenix Photo</a>
+</main>
+<script>
+(function () {
+  var h = location.hash.replace(/^#/, ''), parts = h.split('~');
+  var page = parts[0] || '', id = parts[1] || '', dom = parts[2] || '';
+  var q = '';
+  if (page === 'library' || page === 'family' || page === 'submit') q = '?page=' + page;
+  else if (/^s\.[A-Za-z0-9]{4,16}$/.test(page)) q = '?share=' + page.slice(2);
+  var okId = /^[A-Za-z0-9_-]{20,120}$/.test(id), okDom = !dom || /^[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(dom);
+  if (!q || !okId || !okDom) {
+    document.getElementById('h').textContent = 'This link is not complete';
+    document.getElementById('msg').textContent = 'Ask the person who sent it for the link again.';
+    return;
+  }
+  var target = 'https://script.google.com/' + (dom ? 'a/macros/' + dom.toLowerCase() : 'macros') + '/s/' + id + '/exec' + q;
+  var android = /Android/i.test(navigator.userAgent);
+  document.getElementById('go').href = target;
+  document.getElementById('url').textContent = target;
+  document.getElementById('chrome').href = 'intent://' + target.replace(/^https:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
+  document.getElementById('copy').onclick = function () {
+    var b = this;
+    try { navigator.clipboard.writeText(target).then(function () { b.textContent = 'Copied'; }); } catch (e) { }
+  };
+  if (android) {
+    document.getElementById('h').textContent = 'Open Phoenix Photo';
+    document.getElementById('msg').textContent = 'Tap the button to open it in Chrome.';
+    document.getElementById('help').hidden = false;
+    return;
+  }
+  setTimeout(function () {
+    document.getElementById('h').textContent = 'Open Phoenix Photo';
+    document.getElementById('msg').textContent = 'Click below if nothing happened.';
+    document.getElementById('go').hidden = false;
+  }, 1500);
+  location.replace(target);
+})();
+</script>
+</body>
+</html>

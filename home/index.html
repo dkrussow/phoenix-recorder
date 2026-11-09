@@ -310,6 +310,10 @@ footer a{text-decoration:none}
 .ticks.inline{display:flex;flex-wrap:wrap;gap:12px 28px}
 @media (max-width:900px){.vs{grid-template-columns:1fr}.vs img{height:300px}}
 @media (max-width:520px){.vs .q{font-size:12px}.vs .q3{display:none}}
+
+.small-note{font-size:14.5px !important;color:var(--dim) !important;margin:16px 0 0 !important}
+.cta .disclaimer{max-width:640px;margin:36px auto 0;padding:16px 20px;border:1px solid var(--line);border-radius:14px;background:var(--panel);font-size:15px;color:var(--mute);text-align:left}
+.cta .disclaimer strong{color:var(--ink)}
 @media (max-width:900px){
   nav .links{display:none}
   nav .wrap{justify-content:space-between;gap:12px}
@@ -418,7 +422,7 @@ footer a{text-decoration:none}
   <div class="pillars">
     <div class="pillar"><div class="num">1</div><h3>Your Drive, your files</h3><p>Everything is saved as ordinary files in your own Google Drive. There are no storage fees from us and no lock-in, and if we ever disappear, your memories don't.</p></div>
     <div class="pillar"><div class="num">2</div><h3>Everything in one place</h3><p>Photos, documents, videos, voice stories and books, all together. Other apps usually do one or two of these, so families end up juggling several.</p></div>
-    <div class="pillar"><div class="num">3</div><h3>Made for books and societies</h3><p>Many people can contribute photos and stories to one archive, with credits and captions kept straight, ready to become a printed book.</p></div>
+    <div class="pillar"><div class="num">3</div><h3>Made for books and societies</h3><p>Many people can contribute photos and stories to one archive, with credits and captions kept straight, ready to export to the book maker of your choice.</p></div>
   </div>
   <p class="sub">What lives in your archive</p>
   <div class="kinds">
@@ -428,7 +432,7 @@ footer a{text-decoration:none}
     <div class="kind"><div class="pic voice"><div class="bars" id="bars"></div></div><div class="body"><h3>Voice stories</h3><p>The memories behind each photo, told by the people who lived them.</p></div></div>
   </div>
   <div class="compare">
-    <div class="crow chead"><div></div><div class="us">Phoenix Photo</div><div>Typical photo &amp; story apps</div></div>
+    <div class="crow chead"><div></div><div class="us">Phoenix Photo Archive</div><div>Typical photo &amp; story apps</div></div>
     <div class="crow"><div>Where your files live</div><div class="us">Your own Google Drive</div><div>The company's servers</div></div>
     <div class="crow"><div>Storage fees</div><div class="us">None from us</div><div>Pay more as you add photos</div></div>
     <div class="crow"><div>If the company shuts down</div><div class="us">Your files stay in your Drive</div><div>Your memories may go with it</div></div>
@@ -472,8 +476,9 @@ footer a{text-decoration:none}
     </div>
 
     <div class="row flip">
-      <div class="txt"><span class="eyebrow">Books &amp; societies</span><h3>From many contributors to one book</h3><p>Invite relatives or society members to send in their photos and stories. Everything lands in one archive with each person credited. Then drag your favorites onto the pages, and the captions come along.</p>
-        <ul><li>Many people contribute, you approve</li><li>Credits and captions kept with every photo</li><li>Drag photos onto pages, ready to print</li></ul></div>
+      <div class="txt"><span class="eyebrow">Books &amp; societies</span><h3>From many contributors to one book</h3><p>Invite relatives or society members to send in their photos and stories. Everything lands in one archive with each person credited. When you're ready to make a book, pick your favorites and export them, in order and with their captions, to the book printer of your choice.</p>
+        <ul><li>Many people contribute, you approve</li><li>Credits and captions kept with every photo</li><li>Export print-ready photos and captions for any book maker</li></ul>
+        <p class="small-note">Phoenix Photo prepares your photos for a book. It doesn't print or publish books itself, so you're free to use any service you like.</p></div>
       <div class="book">
         <div class="spread">
           <div class="pg"><img src="img/tanker-12-restored.jpg" alt=""><div class="cap">C-119 Tanker 12 coming in to the air attack base. From the family collection.</div><div class="no">14</div></div>
@@ -519,7 +524,7 @@ footer a{text-decoration:none}
     <div><b>Genealogists</b><span>Keep documents and voices beside your family research.</span></div>
   </div>
   <div class="steps">
-    <div class="step"><h3>Install it in five minutes</h3><p>Follow our short guide to add Phoenix Photo to your own Google account. Your files never leave your Drive.</p></div>
+    <div class="step"><h3>Install it in about 15 minutes</h3><p>Follow our short guide to add Phoenix Photo to your own Google account. Your files never leave your Drive.</p></div>
     <div class="step"><h3>Add your photos and papers</h3><p>Drop in pictures, scans, documents and videos. Label them with names, places and dates.</p></div>
     <div class="step"><h3>Capture and share the stories</h3><p>Let family tell the memories behind each photo, then share the archive with everyone.</p></div>
   </div>
@@ -533,12 +538,14 @@ footer a{text-decoration:none}
 </div></section>
 
 <section id="help"><div class="wrap">
-  <div class="head"><span class="eyebrow">Help</span><h2>Questions and help</h2><p>Phoenix Photo is in early access. Support is by our <a class="feedback-link" href="#">feedback form</a>, and we reply within a few business days.</p></div>
+  <div class="head"><span class="eyebrow">Help</span><h2>Questions and help</h2><p>Phoenix Photo Archive is a small independent business, not a big tech company. Support is by our <a class="feedback-link" href="#">feedback form</a>, and we reply within a few business days.</p></div>
   <div class="faq">
     <details open><summary>Do I need a Google account?</summary><p>Yes. Phoenix Photo runs inside your own Google account and keeps everything in your Google Drive. A free Gmail account works.</p></details>
     <details><summary>Google says the app "isn't verified." Is it safe?</summary><p>Yes. Phoenix Photo installs as your own private copy inside your Google account, so Google shows this warning for it the same way it does for any personal project. Our <a href="../install/">install guide</a> shows each screen and which buttons to press. Your files stay in your Drive and are never sent to us.</p></details>
     <details><summary>I'm stuck during installation. What should I do?</summary><p>Most problems come from skipping a step on Google's permission screens. Go back through the <a href="../install/">install guide</a> one screen at a time, and make sure you choose "Select all" when Google lists the permissions. Still stuck? Send us a note through the <a class="feedback-link" href="#">feedback form</a> with a screenshot, and we'll help.</p></details>
     <details><summary>Something stopped working partway through a big upload.</summary><p>Free Google accounts have daily limits on how much work an app can do. If you add hundreds of photos at once, Phoenix Photo may pause and pick up again later. Your photos are not lost. Try smaller batches, or wait a few hours and continue.</p></details>
+    <details><summary>Should I use my everyday Google account?</summary><p>We recommend creating a new, free Google account just for your archive. It gets the full 15 GB of free Google storage to itself (and you can add more later through Google One). It keeps your archive separate from your personal email, and you can hand the account to another family member someday.</p></details>
+    <details><summary>Can I move my archive to a different Google account?</summary><p>Yes. Your archive is a set of ordinary files in one Google Drive folder, so it can be moved like any other files. Common reasons are combining family archives, switching accounts, or taking over a loved one's archive.</p><p><strong>Moving it yourself:</strong> share the Phoenix Photo folder with the new account, then use Google Drive's <em>Share → Transfer ownership</em> for the files, or download everything with Google Takeout and upload it to the new account. Then install Phoenix Photo in the new account and send us a note through the <a class="feedback-link" href="#">feedback form</a>. We'll help you reconnect the archive.</p><p><strong>Planning ahead:</strong> Google's <em>Inactive Account Manager</em> (in your Google Account settings) lets you choose someone who will receive your files if your account goes unused for a period of time. It's a simple way to make sure the family archive is passed on.</p></details>
     <details><summary>Is there an app to download?</summary><p>No. It runs in your web browser on a computer, tablet or phone. You can add it to your phone's home screen like an app.</p></details>
     <details><summary>Will editing change my original photos?</summary><p>Never. Your original photos, documents and recordings are kept exactly as you added them. Every crop, color fix or restore is saved as a separate version that you can undo at any time.</p></details>
     <details><summary>Who can see my photos and stories?</summary><p>Only you and the people you share with. Everything stays in your Drive, and we never have a copy.</p></details>
@@ -549,8 +556,9 @@ footer a{text-decoration:none}
 <section class="cta alt"><div class="wrap">
   <img class="bird" src="img/phoenix-bird.svg" alt="">
   <h2>Start your family's archive today</h2>
-  <p>Set it up in about five minutes. It's free during early access.</p>
+  <p>Set it up in about 15 minutes. It's free during early access.</p>
   <div class="cta-btns"><a class="btn primary" href="../install/">Install Phoenix Photo free</a><a class="btn ghost feedback-link" href="#">Send feedback</a></div>
+  <p class="disclaimer"><strong>Good to know before you start:</strong> setting up Phoenix Photo takes a little comfort with computers. You'll need a Google account, and you'll follow our step-by-step guide to copy the program into your Google Drive and approve Google's permission screens. It takes about 15 minutes on a computer. After that, using it is point-and-click on any device.</p>
   <p class="tester">Testing Phoenix Photo for us? Tell us what worked, what was confusing and what you'd add. It takes two minutes.</p>
 </div></section>
 

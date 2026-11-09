@@ -14,9 +14,11 @@ body{margin:0;background:linear-gradient(165deg,#0b1d3b 0%,#0d1526 45%,#10141c 1
 a{color:#8fb3ff}
 .wrap{max-width:820px;margin:0 auto;padding:0 16px}
 header{padding:28px 0 8px;display:flex;align-items:center;gap:16px}
+header .tl{margin:0 0 0 94px}
+@media (max-width:560px){header .tl{margin-left:28%}}
 header img.lg{height:64px;width:auto;max-width:100%;display:block}
 @media (max-width:560px){header img.lg{height:auto;width:100%}}
-@media print{header img.lg{content:url(../brand/phoenix-photo-archive-light.svg)}}
+@media print{header img.lg{content:url(../brand/phoenix-photo-archive-compact-light.svg)}}
 .wm{font-weight:800;font-size:26px;letter-spacing:-.01em}.wm i{font-style:normal;color:#6f9bff}
 .tl{color:var(--mute);font-style:italic;font-size:15px}
 h1{font-size:34px;line-height:1.2;margin:22px 0 6px}
@@ -45,7 +47,7 @@ footer{color:var(--mute);font-size:14px;padding:30px 0 40px;border-top:1px solid
 </head>
 <body>
 <div class="wrap">
-<header><img class="lg" src="../brand/phoenix-photo-archive.svg" alt="Phoenix Photo Archive. Every photo has a story."></header>
+<header><div><img class="lg" src="../brand/phoenix-photo-archive-compact.svg" alt="Phoenix Photo Archive"><div class="tl">Every photo has a story.</div></div></header>
 
 <h1>Set up your own Phoenix Photo</h1>
 <p class="lead">Your photos, stories and recordings stay in your own Google account. Nobody else can see them unless you share them. New versions arrive by themselves.</p>

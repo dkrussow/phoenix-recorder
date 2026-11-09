@@ -334,6 +334,17 @@ footer a{text-decoration:none}
   .player .info{display:none}
 }
 @media (max-width:520px){.wrap{padding:0 16px}.hero .ctas .btn{flex:1;justify-content:center}.kinds{grid-template-columns:1fr}.book{padding:18px 12px}.pg{padding:12px 10px}}
+.baby{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}
+.baby .photo{position:relative;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line)}
+.baby .photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.baby .photo .stamp{position:absolute;left:16px;top:16px;background:rgba(10,23,48,.78);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);padding:6px 12px;border-radius:30px;font:600 13px Inter;letter-spacing:.06em}
+.baby .photo .lock{position:absolute;right:16px;bottom:16px;background:rgba(10,23,48,.85);border:1px solid rgba(255,255,255,.15);padding:6px 12px;border-radius:30px;font:600 13px Inter}
+.baby h2{font-size:clamp(30px,3.4vw,40px);font-weight:600;margin-bottom:16px;text-wrap:balance}
+.baby p{color:var(--mute);font-size:18px;margin:0 0 20px}
+.baby blockquote{margin:0 0 22px;padding:0 0 0 18px;border-left:3px solid var(--warm);font-size:22px;line-height:1.45;color:var(--ink)}
+.baby .fam{display:grid;gap:8px;margin-top:24px}
+.baby .fam .tale{background:var(--panel)}
+@media (max-width:900px){.baby{grid-template-columns:1fr;gap:36px}}
 </style>
 </head>
 <body>
@@ -509,12 +520,30 @@ footer a{text-decoration:none}
   </div>
 </div></section>
 
+<!-- NEW PARENTS -->
+<section id="baby"><div class="wrap">
+  <div class="baby">
+    <div class="photo"><img src="img/baby-home.jpg" alt="A sleeping newborn in a car seat, holding a soft blue toy dinosaur"><span class="stamp">DAY ONE</span><span class="lock">🔒 Family only</span></div>
+    <div>
+      <span class="eyebrow">For new parents</span>
+      <h2>Share the baby with family, not the whole internet</h2>
+      <blockquote class="quote">“Guess who's coming home from the hospital today?”</blockquote>
+      <p>Send a private link to the people you choose, like grandparents, aunts and uncles. They can see every new photo and video on any phone, without social media, ads or strangers. Only the people you invite can see it, and you can remove access at any time.</p>
+      <ul class="ticks"><li>Private to the family you invite</li><li>No ads, no feeds, no public profile</li><li>Every photo stays in your own Google Drive</li><li>Record the story of each first, in your own voice</li></ul>
+      <div class="fam">
+        <div class="tale"><span class="av" style="background:#c6a43a">GM</span><div><b>Grandma</b><span class="q">“Look at that little dinosaur! Counting the minutes until we meet you.”</span></div></div>
+        <div class="tale"><span class="av" style="background:#8a5bbb">NO</span><div><b>Aunt Nora</b><span class="q">“So perfect. Welcome home, little one.”</span></div></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
 <!-- WHO + HOW -->
-<section id="how"><div class="wrap">
+<section id="how" class="alt"><div class="wrap">
   <div class="head"><span class="eyebrow">Who it's for</span><h2>For anyone keeping a history</h2></div>
   <div class="aud">
     <div><b>Families</b><span>Capture what Grandma and Grandpa remember while you still can.</span></div>
-    <div><b>New parents</b><span>Share the baby's first years privately, with no ads.</span></div>
+    <div><b>New parents</b><span>Share the baby's first years with the family you choose, privately and with no ads.</span></div>
     <div><b>Historical societies</b><span>Save the history of a town, a building or a group.</span></div>
     <div><b>Memorials</b><span>Friends and family add their stories of someone they loved.</span></div>
     <div><b>Senior living &amp; memory care</b><span>Reminisce with residents, and keep their voices for the family.</span></div>
@@ -530,14 +559,14 @@ footer a{text-decoration:none}
   </div>
 </div></section>
 
-<section id="pricing" class="alt"><div class="wrap">
+<section id="pricing"><div class="wrap">
   <div class="price-box">
     <div><span class="eyebrow">Pricing</span><h2>Free during early access</h2><p>Every feature is free while we test Phoenix Photo together. When paid plans arrive, they will be priced so every family can afford them, and early testers keep a founding-member discount.</p></div>
     <div class="plan hi"><span class="tag">Now open</span><h3>Early access</h3><div class="price">$0</div><ul><li>Every feature, including voice stories</li><li>Unlimited photos (uses your own Drive space)</li><li>Founding-member pricing later</li><li>Help by feedback form, replies within a few business days</li></ul><a class="btn primary" href="../install/">Install free</a></div>
   </div>
 </div></section>
 
-<section id="help"><div class="wrap">
+<section id="help" class="alt"><div class="wrap">
   <div class="head"><span class="eyebrow">Help</span><h2>Questions and help</h2><p>Phoenix Photo Archive is a small independent business, not a big tech company. Support is by our <a class="feedback-link" href="#">feedback form</a>, and we reply within a few business days.</p></div>
   <div class="faq">
     <details open><summary>Do I need a Google account?</summary><p>Yes. Phoenix Photo runs inside your own Google account and keeps everything in your Google Drive. A free Gmail account works.</p></details>
@@ -554,7 +583,7 @@ footer a{text-decoration:none}
   </div>
 </div></section>
 
-<section class="cta alt"><div class="wrap">
+<section class="cta"><div class="wrap">
   <img class="bird" src="img/phoenix-bird.svg" alt="">
   <h2>Start your family's archive today</h2>
   <p>Set it up in about 15 minutes. It's free during early access.</p>

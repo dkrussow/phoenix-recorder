@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Phoenix Photo Archive · Every photo has a story</title>
+<meta name="description" content="Keep your family's photos, documents, videos and the stories behind them in one place, safe for generations. Phoenix Photo Archive runs in your own Google Drive.">
+<link rel="icon" href="img/phoenix-mark-120.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Phoenix Photo Archive · Every photo has a story">
+<meta property="og:description" content="Your family's photos, documents, videos and voice stories in one place, kept in your own Google Drive.">
+<meta property="og:url" content="https://dkrussow.github.io/phoenix-recorder/home/">
+<meta property="og:image" content="https://dkrussow.github.io/phoenix-recorder/home/img/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital@1&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a1730; --bg2:#0e1f3f; --panel:#13274b; --panel2:#18305a; --line:#24406f;
+  --ink:#f2f5fb; --mute:#a7b3cb; --dim:#7584a3;
+  --brand:#0050ff; --accent:#2f8cf0; --sky:#22c9ff; --warm:#f2c36b;
+  --glow:rgba(34,140,255,.28); --shadow:0 30px 60px -20px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;line-height:1.15;margin:0;letter-spacing:-.01em}
+a{color:inherit}
+img{max-width:100%}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:12px;font:600 16px Inter,sans-serif;text-decoration:none;border:1.5px solid transparent;cursor:pointer;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--brand);color:#fff;box-shadow:0 10px 24px -8px rgba(0,80,255,.7)}
+.btn.primary:hover{background:#1a63ff}
+.btn.ghost{border-color:var(--line);color:var(--ink)}
+.eyebrow{display:inline-block;font:600 13px Inter,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.quote{font-family:Lora,Georgia,serif;font-style:italic}
+
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+nav .wrap{display:flex;align-items:center;gap:28px;height:72px}
+.logo{width:300px;height:46px;background:url(img/phoenix-photo-archive.svg) left center/contain no-repeat;flex:none}
+nav .links{display:flex;gap:26px;margin-left:auto;font-size:15px;color:var(--mute)}
+nav .links a{text-decoration:none}
+nav .links a:hover{color:var(--ink)}
+nav .btn{padding:10px 18px;font-size:15px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding:80px 0 104px}
+.hero:before{content:"";position:absolute;inset:-30% -10% auto 40%;height:900px;background:radial-gradient(closest-side,var(--glow),transparent 70%);pointer-events:none}
+.hero .wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:center;position:relative}
+.hero h1{font-size:clamp(38px,4.8vw,58px);font-weight:700}
+.hero h1 em{font-style:normal;background:linear-gradient(100deg,var(--sky),var(--brand));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:20px;color:var(--mute);margin:22px 0 32px;max-width:520px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.hero .note{margin-top:18px;font-size:14px;color:var(--dim)}
+
+/* app mock */
+.mock{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.mock .bar{display:flex;align-items:center;gap:7px;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--panel2)}
+.mock .bar i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.mock .bar span{margin-left:10px;font-size:12px;color:var(--dim)}
+.app{display:grid;grid-template-columns:150px 1fr;min-height:340px;background:#11141b;color:#e7e9ee}
+.app .side{background:#161920;border-right:1px solid #262a33;padding:14px 12px;font-size:12.5px;color:#a3a9b5}
+.app .side b{display:block;color:#e7e9ee;font:600 11px Inter;letter-spacing:.1em;text-transform:uppercase;margin:12px 0 6px}
+.app .side b:first-child{margin-top:0}
+.app .side div{padding:4px 8px;border-radius:6px}
+.app .side .on{background:#1f4f82;color:#fff}
+.app .side .drop{outline:1.5px dashed #2f8cf0;background:rgba(47,140,240,.12);color:#fff}
+.chip{display:inline-block;font-size:10.5px;padding:2px 7px;border-radius:20px;margin:2px 2px 0 0;color:#fff}
+.app .grid{padding:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-content:start;position:relative}
+.app .grid figure{margin:0;border-radius:8px;overflow:hidden;background:#1c1f26;border:1px solid #262a33;position:relative}
+.app .grid img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.app .grid figcaption{padding:6px 8px;font-size:11px;color:#a3a9b5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app .grid .badge{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.65);color:#fff;font-size:10px;padding:2px 6px;border-radius:10px}
+.hero .visual{position:relative}
+.story-card{position:absolute;left:-40px;bottom:-64px;width:290px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:var(--shadow);font-size:14px;display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:center}
+.story-card img{width:72px;height:72px;object-fit:cover;border-radius:10px;display:block}
+.story-card .t{font:600 15px Poppins,sans-serif}
+.story-card .m{color:var(--mute);font-size:13px;display:flex;align-items:center;gap:8px;margin-top:4px}
+.mini-play{width:26px;height:26px;border-radius:50%;background:var(--brand);display:grid;place-items:center;flex:none}
+.mini-play:after{content:"";border-left:8px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-left:2px}
+
+/* sections */
+section{padding:100px 0}
+section.alt{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.head{text-align:center;max-width:700px;margin:0 auto 56px}
+.head h2{font-size:clamp(30px,3.6vw,42px);font-weight:600}
+.head p{color:var(--mute);font-size:18px;margin:16px 0 0}
+
+/* featured story */
+.story{display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:center}
+.story .photo{position:relative;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line)}
+.story .photo img{display:block;width:100%}
+.story .photo .stamp{position:absolute;left:16px;top:16px;background:rgba(10,23,48,.78);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);padding:6px 12px;border-radius:30px;font:600 13px Inter;letter-spacing:.06em}
+.story h2{font-size:clamp(32px,3.8vw,46px);font-weight:600;margin-bottom:16px}
+.story p{color:var(--mute);font-size:18px;margin:0 0 22px}
+.story blockquote{margin:0 0 26px;padding:0 0 0 18px;border-left:3px solid var(--warm);font-size:21px;line-height:1.5;color:var(--ink)}
+.player{display:flex;align-items:center;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 18px}
+.player button{width:54px;height:54px;border-radius:50%;border:0;background:var(--brand);cursor:pointer;display:grid;place-items:center;flex:none;box-shadow:0 8px 20px -6px rgba(0,80,255,.8)}
+.player button:before{content:"";border-left:16px solid #fff;border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:4px}
+.player.playing button:before{border:0;width:16px;height:18px;margin:0;background:linear-gradient(90deg,#fff 0 35%,transparent 35% 65%,#fff 65%)}
+.player .wave{flex:1;display:flex;align-items:center;gap:3px;height:40px}
+.player .wave i{flex:1;background:var(--line);border-radius:2px;min-width:2px}
+.player .wave i.on{background:var(--accent)}
+.player .info{font-size:13px;color:var(--mute);text-align:right;line-height:1.35;flex:none}
+.player .info b{display:block;color:var(--ink);font:600 15px Inter}
+.story .small{font-size:15px;color:var(--dim);margin:14px 0 0}
+
+/* everything in one place */
+.kinds{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.kind{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.kind .pic{height:150px;position:relative;overflow:hidden;background:#0c1426;display:grid;place-items:center}
+.kind .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.kind .body{padding:20px 22px 24px}
+.kind h3{font-size:19px;font-weight:600;margin-bottom:6px}
+.kind p{color:var(--mute);margin:0;font-size:15.5px}
+.doc{width:96px;height:124px;background:#efe6cf;border-radius:4px;box-shadow:0 10px 20px rgba(0,0,0,.5);position:absolute;padding:12px 10px;transform:rotate(-6deg);left:calc(50% - 80px);top:16px}
+.doc.b{transform:rotate(5deg);left:calc(50% - 10px);top:12px;background:#1f3a6b}
+.doc i{display:block;height:4px;background:#b9ab88;border-radius:2px;margin:6px 0}
+.doc .seal{width:22px;height:22px;border-radius:50%;border:2px solid #b04a3c;margin:10px auto 0}
+.doc.b .crest{width:30px;height:30px;border-radius:50%;border:2px solid #d8c27a;margin:20px auto 10px}
+.doc.b em{display:block;text-align:center;color:#d8c27a;font:600 8px Inter;letter-spacing:.16em;font-style:normal}
+.vid:after{content:"";position:absolute;inset:0;margin:auto;width:48px;height:48px;border-radius:50%;background:rgba(0,0,0,.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M7 5l8 5-8 5z' fill='white'/%3E%3C/svg%3E") center/22px no-repeat;border:1.5px solid rgba(255,255,255,.7)}
+.voice{background:linear-gradient(135deg,#0b1d3b,#0a2a72)}
+.voice .bars{display:flex;gap:4px;align-items:center;height:60px}
+.voice .bars i{width:5px;border-radius:3px;background:var(--sky)}
+
+/* feature rows */
+.tour{display:grid;gap:96px}
+.row{display:grid;grid-template-columns:1fr 1.1fr;gap:64px;align-items:center}
+.row.flip .txt{order:2}
+.row h3{font-size:32px;font-weight:600;margin-bottom:14px}
+.row p{color:var(--mute);font-size:17.5px;margin:0 0 18px}
+.row ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.row li{display:flex;gap:10px;align-items:flex-start}
+.row li:before{content:"";flex:none;width:18px;height:18px;margin-top:4px;border-radius:50%;background:var(--brand) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3 3 7-7' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat}
+
+/* before / after */
+.ba{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center}
+.ba figure{margin:0;position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);aspect-ratio:4/5;max-width:100%}
+.ba img{width:100%;height:100%;object-fit:cover;object-position:52% 60%;display:block}
+.ba figcaption{position:absolute;left:12px;top:12px;padding:5px 11px;border-radius:20px;background:rgba(0,0,0,.6);font:600 12px Inter;letter-spacing:.08em;text-transform:uppercase}
+.ba figure.after figcaption{background:var(--brand)}
+.ba .arrow{display:grid;justify-items:center;gap:6px;font:600 12px Inter;color:var(--mute);text-align:center}
+.ba .arrow b{width:46px;height:46px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:20px;box-shadow:0 8px 20px -6px rgba(0,80,255,.8)}
+.ba-note{grid-column:1/-1;font-size:14px;color:var(--dim);text-align:center;margin:4px 0 0}
+
+/* drag mock */
+.drag-ghost{position:absolute;width:118px;border-radius:8px;overflow:hidden;border:2px solid #2f8cf0;box-shadow:0 18px 30px rgba(0,0,0,.6);transform:rotate(-5deg);left:132px;top:62px;width:100px;background:#1c1f26;z-index:2}
+.drag-ghost img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.drag-ghost span{position:absolute;right:-8px;top:-8px;width:22px;height:22px;border-radius:50%;background:#2f8cf0;color:#fff;font:700 12px Inter;display:grid;place-items:center}
+.cursor{position:absolute;left:196px;top:112px;z-index:3;width:18px;height:22px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 22'%3E%3Cpath d='M1 1l15 11-7 1-4 7z' fill='white' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E") no-repeat}
+
+/* book mock */
+.book{background:linear-gradient(180deg,#1a2238,#0f1526);border-radius:18px;padding:34px 28px;border:1px solid var(--line);box-shadow:var(--shadow)}
+.spread{display:grid;grid-template-columns:1fr 1fr;background:#f6f1e6;border-radius:4px;box-shadow:0 20px 40px rgba(0,0,0,.55);position:relative}
+.spread:after{content:"";position:absolute;top:0;bottom:0;left:50%;width:30px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(0,0,0,.14),transparent)}
+.pg{padding:20px 20px 16px;color:#2b2a27}
+.pg img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:2px}
+.pg .cap{font:italic 12.5px/1.45 Lora,Georgia,serif;margin-top:10px}
+.pg .no{font:10px Inter;color:#9a958a;text-align:center;margin-top:10px}
+.pg h4{font:600 15px Poppins;margin:0 0 8px;color:#0b1d3b}
+.thumbs{display:flex;gap:8px;margin-top:20px;justify-content:center}
+.thumbs i{width:54px;height:38px;border-radius:3px;background:#2a3554;border:1px solid #3a4870}
+.thumbs i.on{border:2px solid var(--accent);background:#3a4d7a}
+
+/* memory wall */
+.wall{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.mem{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.mem img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.mem .body{padding:20px 22px 22px}
+.mem .yr{font:600 12px Inter;letter-spacing:.12em;text-transform:uppercase;color:var(--warm)}
+.mem h3{font-size:19px;font-weight:600;margin:6px 0 8px}
+.mem .quote{color:var(--mute);font-size:16px;line-height:1.5}
+.mem .by{margin-top:12px;font-size:13px;color:var(--dim);display:flex;align-items:center;gap:8px}
+
+.share{margin-top:80px;border-radius:22px;padding:48px;background:linear-gradient(120deg,#0b1d3b,#0a2a72 60%,#0050ff);display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:center}
+.share h3{font-size:32px;font-weight:600;margin-bottom:12px}
+.share p{margin:0;color:#c9d6f2;font-size:17.5px}
+.share .people{display:grid;gap:10px}
+.share .msg{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+.share .msg span{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font:600 12px Inter}
+.share .msg b{display:block;font-size:13px}
+.share .msg div{color:#d7e2f7}
+
+/* who + steps */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px}
+.card .ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--brand) 16%,transparent);color:var(--accent);margin-bottom:18px}
+.card h3{font-size:20px;font-weight:600;margin-bottom:8px}
+.card p{color:var(--mute);margin:0;font-size:16px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;counter-reset:s;margin-top:72px}
+.step{position:relative;padding:28px 26px 26px;border-radius:18px;border:1px dashed var(--line)}
+.step:before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--brand);color:#fff;font:600 17px Poppins;margin-bottom:16px}
+.step h3{font-size:19px;font-weight:600;margin-bottom:6px}
+.step p{margin:0;color:var(--mute);font-size:16px}
+
+/* pricing */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+.plan{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:30px;display:flex;flex-direction:column}
+.plan.hi{border:2px solid var(--brand);box-shadow:0 20px 50px -24px rgba(0,80,255,.6)}
+.plan .tag{align-self:flex-start;font:600 12px Inter;letter-spacing:.08em;text-transform:uppercase;background:var(--brand);color:#fff;padding:4px 10px;border-radius:20px;margin-bottom:14px}
+.plan h3{font-size:21px;font-weight:600}
+.plan .price{font:700 40px Poppins;margin:10px 0 2px}
+.plan p{color:var(--mute);font-size:15.5px;margin:4px 0 18px}
+.plan ul{list-style:none;padding:0;margin:0 0 24px;display:grid;gap:8px;font-size:15.5px}
+.plan li:before{content:"✓  ";color:var(--accent);font-weight:700}
+.plan .btn{margin-top:auto;justify-content:center}
+.plan.soon{opacity:.75}
+.plan.soon .tag{background:var(--line);color:var(--ink)}
+
+.faq{max-width:760px;margin:0 auto;display:grid;gap:12px}
+details{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary:after{content:"+";color:var(--accent);font-size:22px;line-height:1}
+details[open] summary:after{content:"–"}
+details p{color:var(--mute);margin:10px 0 0}
+
+.cta{text-align:center;position:relative;overflow:hidden}
+.cta h2{font-size:clamp(30px,3.6vw,44px);font-weight:600}
+.cta p{color:var(--mute);font-size:18px;margin:14px auto 30px;max-width:560px}
+.cta .bird{width:120px;margin-bottom:20px;opacity:.95}
+
+footer{border-top:1px solid var(--line);padding:36px 0;color:var(--dim);font-size:14px}
+footer .wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+footer .logo{width:190px;height:30px}
+footer .sp{margin-left:auto;display:flex;gap:20px}
+footer a{text-decoration:none}
+
+
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.pillar{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:20px;padding:32px 28px}
+.pillar .num{width:44px;height:44px;border-radius:12px;background:var(--brand);display:grid;place-items:center;font:700 20px Poppins;margin-bottom:18px;box-shadow:0 8px 20px -6px rgba(0,80,255,.8)}
+.pillar h3{font-size:22px;font-weight:600;margin-bottom:10px}
+.pillar p{color:var(--mute);margin:0;font-size:16.5px}
+.compare{margin-top:48px;border:1px solid var(--line);border-radius:18px;overflow:hidden;font-size:16px}
+.crow{display:grid;grid-template-columns:1.3fr 1fr 1fr}
+.crow>div{padding:14px 20px;border-top:1px solid var(--line)}
+.crow:first-child>div{border-top:0}
+.crow>div:first-child{color:var(--mute)}
+.crow .us{background:rgba(0,80,255,.12);color:var(--ink);font-weight:600}
+.crow>div:last-child{color:var(--dim)}
+.chead>div{font:600 13px Inter;letter-spacing:.08em;text-transform:uppercase;padding-top:16px;padding-bottom:16px}
+.chead .us{color:#7fb6ff}
+@media (max-width:900px){.pillars{grid-template-columns:1fr}.crow{grid-template-columns:1fr 1fr}.crow>div:first-child{grid-column:1/-1;padding-bottom:4px;font-weight:600;color:var(--ink)}.crow>div:not(:first-child){border-top:0;padding-top:4px}.chead>div:first-child{display:none}.chead>div:not(:first-child){border-top:0;padding-top:16px}}
+
+.many{display:grid;grid-template-columns:1fr 1.05fr;gap:64px;align-items:center}
+.many h2{font-size:clamp(30px,3.4vw,40px);font-weight:600;margin-bottom:16px;text-wrap:balance}
+.many p{color:var(--mute);font-size:18px;margin:0 0 20px}
+.many .small{font-size:15.5px;color:var(--dim);margin:20px 0 0}
+.ticks{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.ticks li{display:flex;gap:10px}
+.ticks li:before{content:"";flex:none;width:18px;height:18px;margin-top:4px;border-radius:50%;background:var(--brand) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3 3 7-7' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat}
+.thread{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:16px;display:grid;gap:10px;box-shadow:var(--shadow)}
+.thread figure{margin:0 0 4px;border-radius:12px;overflow:hidden;position:relative}
+.thread figure img{display:block;width:100%;aspect-ratio:16/8;object-fit:cover}
+.thread figcaption{position:absolute;left:10px;bottom:10px;background:rgba(10,23,48,.8);padding:4px 10px;border-radius:20px;font:600 12px Inter}
+.tale{display:flex;gap:12px;align-items:flex-start;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14.5px}
+.tale .av{width:32px;height:32px;border-radius:50%;flex:none;display:grid;place-items:center;font:600 12px Inter}
+.tale b{display:block;font-size:12.5px;color:var(--mute);font-weight:600;margin-bottom:2px}
+.tale .q{font-family:Lora,Georgia,serif;font-style:italic;color:var(--ink)}
+.tale.voice{border-color:color-mix(in srgb,var(--brand) 60%,var(--line))}
+.mini-wave{display:flex;align-items:center;gap:8px;margin-top:8px}
+.mini-wave i{flex:1;height:14px;background:repeating-linear-gradient(90deg,var(--accent) 0 2px,transparent 2px 5px);opacity:.7;border-radius:2px}
+.thread .add{border:1.5px dashed var(--line);border-radius:12px;padding:10px;text-align:center;color:var(--accent);font:600 14px Inter}
+@media (max-width:900px){.many{grid-template-columns:1fr;gap:36px}}
+@media (max-width:520px){.ba{grid-template-columns:1fr 1fr}.ba .arrow{display:none}}
+
+.sub{font:600 13px Inter;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-align:center;margin:56px 0 18px}
+#why .kind .pic{height:120px}
+.aud{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.aud div{background:var(--panel);padding:20px 22px;display:grid;gap:4px}
+.aud b{font:600 17px Poppins,sans-serif}
+.aud span{color:var(--mute);font-size:15px}
+.price-box{display:grid;grid-template-columns:1.2fr 1fr;gap:56px;align-items:center}
+.price-box h2{font-size:clamp(30px,3.6vw,42px);font-weight:600;margin-bottom:14px}
+.price-box p{color:var(--mute);font-size:18px;margin:0}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cta .tester{font-size:15px;color:var(--dim);margin:20px auto 0}
+@media (max-width:900px){.aud{grid-template-columns:1fr 1fr}.price-box{grid-template-columns:1fr;gap:32px}}
+@media (max-width:520px){.aud{grid-template-columns:1fr}}
+
+.shot{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:var(--panel)}
+.shot img{display:block;width:100%;height:auto}
+.row:has(.shot){grid-template-columns:.75fr 1.45fr;gap:48px}
+.row.flip:has(.shot){grid-template-columns:1.45fr .75fr}
+@media (max-width:900px){.row:has(.shot),.row.flip:has(.shot){grid-template-columns:1fr}}
+.shot figcaption{padding:10px 16px;font-size:13px;color:var(--dim);border-top:1px solid var(--line)}
+
+.folders{display:grid;gap:28px}
+.fhead{max-width:720px}
+.fhead h3{font-size:32px;font-weight:600;margin-bottom:14px}
+.fhead p{color:var(--mute);font-size:17.5px;margin:0}
+.vs{display:grid;grid-template-columns:1fr 1.25fr;gap:24px;align-items:stretch}
+.vs figure{margin:0;position:relative;border-radius:16px;overflow:hidden;background:var(--panel);display:flex;flex-direction:column}
+.vs img{display:block;width:100%;height:380px;object-fit:cover;object-position:left top}
+.vs figcaption{padding:12px 16px;font-size:14px;color:var(--mute)}
+.vs .bad{border:2px solid #d9484d}
+.vs .bad img{filter:saturate(.55) brightness(.8)}
+.vs .good{border:2px solid #2fb370;box-shadow:0 20px 50px -24px rgba(47,179,112,.5)}
+.vs .tag{position:absolute;left:12px;top:12px;display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:30px;font:600 13px Inter;color:#fff;background:rgba(10,23,48,.85)}
+.vs .tag b{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:14px}
+.vs .bad .tag b{background:#d9484d}
+.vs .good .tag b{background:#2fb370}
+.vs .q{position:absolute;background:#fff;color:#0b1d3b;font:600 13px Inter;padding:7px 12px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.45)}
+.vs .q:after{content:"";position:absolute;bottom:-6px;left:18px;border:6px solid transparent;border-top-color:#fff;border-bottom:0}
+.vs .q1{left:10%;top:22%}.vs .q2{right:6%;top:45%}.vs .q3{left:14%;top:66%}
+.ticks.inline{display:flex;flex-wrap:wrap;gap:12px 28px}
+@media (max-width:900px){.vs{grid-template-columns:1fr}.vs img{height:300px}}
+@media (max-width:520px){.vs .q{font-size:12px}.vs .q3{display:none}}
+
+.small-note{font-size:14.5px !important;color:var(--dim) !important;margin:16px 0 0 !important}
+.cta .disclaimer{max-width:640px;margin:36px auto 0;padding:16px 20px;border:1px solid var(--line);border-radius:14px;background:var(--panel);font-size:15px;color:var(--mute);text-align:left}
+.cta .disclaimer strong{color:var(--ink)}
+@media (max-width:900px){
+  nav .links{display:none}
+  nav .wrap{justify-content:space-between;gap:12px}
+  .logo{width:200px;height:32px}
+  .hero{padding:44px 0 96px}
+  .hero .wrap,.row,.share,.story{grid-template-columns:1fr;gap:40px}
+  .row.flip .txt{order:0}
+  .cards,.steps,.plans,.wall{grid-template-columns:1fr}
+  .kinds{grid-template-columns:1fr 1fr}
+  .story-card{left:12px;bottom:-56px;width:270px}
+  .app{grid-template-columns:1fr}
+  .app .side{display:none}
+  .drag-ghost,.cursor{display:none}
+  section{padding:76px 0}
+  .share{padding:32px 24px}
+  .tour{gap:72px}
+  .player{padding:12px}
+  .player .info{display:none}
+}
+@media (max-width:520px){.wrap{padding:0 16px}.hero .ctas .btn{flex:1;justify-content:center}.kinds{grid-template-columns:1fr}.book{padding:18px 12px}.pg{padding:12px 10px}}
+.baby{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}
+.baby .photo{position:relative;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line)}
+.baby .photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.baby .photo .stamp{position:absolute;left:16px;top:16px;background:rgba(10,23,48,.78);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);padding:6px 12px;border-radius:30px;font:600 13px Inter;letter-spacing:.06em}
+.baby .photo .lock{position:absolute;right:16px;bottom:16px;background:rgba(10,23,48,.85);border:1px solid rgba(255,255,255,.15);padding:6px 12px;border-radius:30px;font:600 13px Inter}
+.baby h2{font-size:clamp(30px,3.4vw,40px);font-weight:600;margin-bottom:16px;text-wrap:balance}
+.baby p{color:var(--mute);font-size:18px;margin:0 0 20px}
+.baby blockquote{margin:0 0 22px;padding:0 0 0 18px;border-left:3px solid var(--warm);font-size:22px;line-height:1.45;color:var(--ink)}
+.baby .fam{display:grid;gap:8px;margin-top:24px}
+.baby .fam .tale{background:var(--panel)}
+@media (max-width:900px){.baby{grid-template-columns:1fr;gap:36px}}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="logo" href="#" aria-label="Phoenix Photo Archive"></a>
+  <div class="links"><a href="#story">Stories</a><a href="#why">Why Phoenix</a><a href="#features">Features</a><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#help">Help</a></div>
+  <a class="btn primary" href="../install/">Install free</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div>
+    <span class="eyebrow">Now in early access</span>
+    <h1>Every photo has a story. <em>Keep them together.</em></h1>
+    <p class="lead">Your family's photos, documents, videos and voice stories, together in one place. And it all lives in your own Google Drive, safe for generations.</p>
+    <div class="ctas"><a class="btn primary" href="../install/">Try it free</a><a class="btn ghost" href="#story">Hear a story</a></div>
+    <div class="note">Your files stay in your Drive · Originals never altered · No storage fees</div>
+  </div>
+  <div class="visual">
+    <div class="mock">
+      <div class="bar"><i></i><i></i><i></i><span>Phoenix Photo Archive</span></div>
+      <div class="app">
+        <div class="side">
+          <b>Library</b><div class="on">Everything</div><div>Photos</div><div>Documents</div><div>Videos</div><div>Stories</div>
+          <b>Albums</b><div>Grandpa in Berlin</div><div>Coast trips</div><div>Air shows</div>
+        </div>
+        <div class="grid">
+          <figure><img src="img/2.jpg" alt=""><figcaption>Air show, 2011</figcaption></figure>
+          <figure><img src="img/vw-berlin.jpg" alt=""><span class="badge">▶ 0:37</span><figcaption>Berlin, 1968</figcaption></figure>
+          <figure><img src="img/1.jpg" alt=""><figcaption>Rocky point at sunset</figcaption></figure>
+          <figure><img src="img/rainbow-restored.jpg" alt=""><figcaption>Chasing the rainbow, 1982</figcaption></figure>
+          <figure><img src="img/dirt-bikes.jpg" alt=""><figcaption>Desert ride, 2016</figcaption></figure>
+          <figure><img src="img/tanker-12.jpg" alt=""><figcaption>C-119 Tanker 12 coming in</figcaption></figure>
+        </div>
+      </div>
+    </div>
+    <div class="story-card">
+      <img src="img/vw-berlin.jpg" alt="">
+      <div><div class="t">Berlin, 1968</div><div class="m"><span class="mini-play"></span>Told by Grandpa · 0:37</div></div>
+    </div>
+  </div>
+</div></header>
+
+<!-- FEATURED STORY -->
+<section id="story" class="alt"><div class="wrap">
+  <div class="story">
+    <div class="photo"><img src="img/vw-berlin.jpg" alt="A young man changing the license plate on a green Volkswagen Beetle, 1968"><span class="stamp">BERLIN · 1968</span></div>
+    <div>
+      <span class="eyebrow">Hear it in his own words</span>
+      <h2>Crossing into East Berlin, 1968</h2>
+      <p>As a college student in England, he spent his breaks traveling around Europe in this Volkswagen. Here he is changing the license plate before crossing from West Germany into East Berlin. Decades later, he told the story while looking at this very photo.</p>
+      <blockquote class="quote">“This picture was taken, I believe, in 1968. I was in college in England and was travelling around Europe. This picture was taken as I was preparing to cross from West Germany into East Berlin. Of course, at that time Berlin was still separated…”</blockquote>
+      <div class="player" id="player">
+        <button aria-label="Play the story"></button>
+        <div class="wave" id="wave"></div>
+        <div class="info"><b id="ptime">0:37</b>Told by Grandpa</div>
+      </div>
+      <p class="small">Most photo apps save the picture. Phoenix Photo Archive saves the person behind it.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- MANY STORIES, ONE PHOTO -->
+<section id="many"><div class="wrap">
+  <div class="many">
+    <div class="txt">
+      <span class="eyebrow">Many voices, one photo</span>
+      <h2>Everyone who remembers it can add their story</h2>
+      <p>One photo can hold many stories. A pilot, a mechanic and a neighbor each remember the same day differently. Each person adds a written or spoken story, and each one stays attached to the photo with their name on it.</p>
+      <ul class="ticks"><li>Written and voice stories on the same photo</li><li>Every story credited to the person who told it</li><li>Only people you invite can add stories</li></ul>
+      <p class="small">This is how historical societies and community groups save the history of a place, a building or an organization while the people who were there can still tell it.</p>
+    </div>
+    <div class="thread">
+      <figure><img src="img/tanker-12.jpg" alt="A C-119 air tanker taxiing at an air attack base"><figcaption>C-119 Tanker 12 coming in · 1980s</figcaption></figure>
+      <div class="tale voice"><span class="av" style="background:#2f8cf0">DK</span><div><b>Dave · voice story</b><span class="q">“I will never forget that C-119 coming onto the base with its engines roaring…”</span><span class="mini-wave"><span class="mini-play"></span><i></i></span></div></div>
+      <div class="tale"><span class="av" style="background:#c0463f">RM</span><div><b>Retired base mechanic · written</b><span class="q">“We'd have her loaded and turned around in under twenty minutes on a good day.”</span></div></div>
+      <div class="tale"><span class="av" style="background:#4f9a55">SB</span><div><b>Neighbor near the airport · written</b><span class="q">“Every summer we knew fire season had started when the tankers flew over the house.”</span></div></div>
+      <div class="add">+ Add your story to this photo</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- NEW PARENTS -->
+<section id="baby" class="alt"><div class="wrap">
+  <div class="baby">
+    <div class="photo"><img src="img/baby-home.jpg" alt="A sleeping newborn in a car seat, holding a soft blue toy dinosaur"><span class="stamp">DAY ONE</span><span class="lock">🔒 Family only</span></div>
+    <div>
+      <span class="eyebrow">For new parents</span>
+      <h2>Share the baby with family, not the whole internet</h2>
+      <blockquote class="quote">“Guess who's coming home from the hospital today?”</blockquote>
+      <p>Send a private link to the people you choose, like grandparents, aunts and uncles. They can see every new photo and video on any phone, without social media, ads or strangers. Only the people you invite can see it, and you can remove access at any time.</p>
+      <ul class="ticks"><li>Private to the family you invite</li><li>No ads, no feeds, no public profile</li><li>Every photo stays in your own Google Drive</li><li>Record the story of each first, in your own voice</li></ul>
+      <div class="fam">
+        <div class="tale"><span class="av" style="background:#c6a43a">GM</span><div><b>Grandma</b><span class="q">“Look at that little dinosaur! Counting the minutes until we meet you.”</span></div></div>
+        <div class="tale"><span class="av" style="background:#8a5bbb">NO</span><div><b>Aunt Nora</b><span class="q">“So perfect. Welcome home, little one.”</span></div></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- WHY PHOENIX -->
+<section id="why"><div class="wrap">
+  <div class="head"><span class="eyebrow">Why Phoenix Photo Archive</span><h2>Built to last as long as your memories</h2><p>Most photo and story apps keep your memories on their servers and charge you for the space. Phoenix Photo Archive works differently.</p></div>
+  <div class="pillars">
+    <div class="pillar"><div class="num">1</div><h3>Your Drive, your files</h3><p>Everything is saved as ordinary files in your own Google Drive. There are no storage fees from us and no lock-in, and if we ever disappear, your memories don't.</p></div>
+    <div class="pillar"><div class="num">2</div><h3>Everything in one place</h3><p>Photos, documents, videos, voice stories and books, all together. Other apps usually do one or two of these, so families end up juggling several.</p></div>
+    <div class="pillar"><div class="num">3</div><h3>Made for books and societies</h3><p>Many people can contribute photos and stories to one archive, with credits and captions kept straight, ready to export to the book maker of your choice.</p></div>
+  </div>
+  <p class="sub">What lives in your archive</p>
+  <div class="kinds">
+    <div class="kind"><div class="pic"><img src="img/dirt-bikes.jpg" alt=""></div><div class="body"><h3>Photos</h3><p>New phone pictures and old scanned prints, side by side.</p></div></div>
+    <div class="kind"><div class="pic"><div class="doc"><i></i><i style="width:70%"></i><i></i><i style="width:55%"></i><i></i><div class="seal"></div></div><div class="doc b"><div class="crest"></div><em>PASSPORT</em></div></div><div class="body"><h3>Documents</h3><p>Old passports, birth and marriage certificates, letters and deeds.</p></div></div>
+    <div class="kind"><div class="pic vid"><img src="img/1.jpg" alt=""></div><div class="body"><h3>Videos</h3><p>Home movies and phone clips, right next to the photos from that day. Short clips work best.</p></div></div>
+    <div class="kind"><div class="pic voice"><div class="bars" id="bars"></div></div><div class="body"><h3>Voice stories</h3><p>The memories behind each photo, told by the people who lived them.</p></div></div>
+  </div>
+  <div class="compare">
+    <div class="crow chead"><div></div><div class="us">Phoenix Photo Archive</div><div>Typical photo &amp; story apps</div></div>
+    <div class="crow"><div>Where your files live</div><div class="us">Your own Google Drive</div><div>The company's servers</div></div>
+    <div class="crow"><div>Storage fees</div><div class="us">None from us</div><div>Pay more as you add photos</div></div>
+    <div class="crow"><div>If the company shuts down</div><div class="us">Your files stay in your Drive</div><div>Your memories may go with it</div></div>
+    <div class="crow"><div>Photos, documents, video, voice and books</div><div class="us">All in one place</div><div>Usually one or two</div></div>
+    <div class="crow"><div>Your original files</div><div class="us">Never changed. Edits are saved as copies</div><div>Often overwritten or compressed</div></div>
+    <div class="crow"><div>Many contributors on one project</div><div class="us">Built in</div><div>Rarely</div></div>
+  </div>
+</div></section>
+
+
+<!-- FEATURE ROWS -->
+<section id="features" class="alt"><div class="wrap">
+  <div class="tour">
+    <div class="row">
+      <div class="txt"><span class="eyebrow">Restore</span><h3>Bring faded photos back with one click</h3><p>Old prints and slides fade and turn pink over the years. One click brings back the color. Every edit is saved as a new version, so your original photo is never changed.</p>
+        <ul><li>One-click color and fade repair</li><li>Remove yellowing from old prints</li><li>The original is always kept</li></ul></div>
+      <div class="ba">
+        <figure><img src="img/rainbow.jpg" alt="Faded original slide of two children pointing at a rainbow"><figcaption>Before</figcaption></figure>
+        <div class="arrow"><b>→</b>One<br>click</div>
+        <figure class="after"><img src="img/rainbow-restored.jpg" alt="The same photo with its color restored"><figcaption>After</figcaption></figure>
+        <p class="ba-note">Your original slide scan stays untouched. The restored version is saved as a separate copy.</p>
+      </div>
+    </div>
+
+    <div class="row flip">
+      <div class="txt"><span class="eyebrow">Edit</span><h3>Real editing tools. Your original stays untouched.</h3><p>Fix exposure, color, shadows and sharpness with the same kind of tools photographers use. Your edits are saved as a small set of settings next to the photo, so the original file is never changed.</p>
+        <ul><li>Restore faded color or remove yellowing</li><li>Exposure, contrast, clarity and more</li><li>Undo and redo anything</li></ul></div>
+      <figure class="shot"><img src="img/app-edit.jpg" alt="Phoenix Photo Archive edit screen with a black-and-white photo of an air tanker dropping retardant, and the editing panel open"><figcaption>The real Phoenix Photo Archive editor</figcaption></figure>
+    </div>
+
+    <div class="folders">
+      <div class="fhead"><span class="eyebrow">Organize</span><h3>No more endless folders</h3><p>You know the photo is in there somewhere. But which folder? Opening them one at a time to find out is where most family photos get lost. Phoenix Photo Archive shows every picture at once, with names, dates and stories attached.</p></div>
+      <div class="vs">
+        <figure class="bad"><img src="img/folders.jpg" alt="A computer window full of yellow folders named only by date"><span class="tag"><b>✕</b>Your photos today</span>
+          <span class="q q1">Which one has Grandpa's car?</span><span class="q q2">What's in 2021-02-19?</span><span class="q q3">Didn't I already look here?</span>
+          <figcaption>Hundreds of folders, and no way to see inside</figcaption></figure>
+        <figure class="good"><img src="img/app-library.jpg" alt="Phoenix Photo Archive library showing a grid of photos with details and keywords"><span class="tag"><b>✓</b>With Phoenix Photo Archive</span>
+          <figcaption>Every photo on one screen, searchable by name, place, year or tag</figcaption></figure>
+      </div>
+      <ul class="ticks inline"><li>See every photo at once</li><li>Drag and drop into albums</li><li>Search by name, place, year or tag</li></ul>
+    </div>
+
+    <div class="row flip">
+      <div class="txt"><span class="eyebrow">Books &amp; societies</span><h3>From many contributors to one book</h3><p>Invite relatives or society members to send in their photos and stories. Everything lands in one archive with each person credited. When you're ready to make a book, pick your favorites and export them, in order and with their captions, to the book printer of your choice.</p>
+        <ul><li>Many people contribute, you approve</li><li>Credits and captions kept with every photo</li><li>Export print-ready photos and captions for any book maker</li></ul>
+        <p class="small-note">Phoenix Photo Archive prepares your photos for a book. It doesn't print or publish books itself, so you're free to use any service you like.</p></div>
+      <div class="book">
+        <div class="spread">
+          <div class="pg"><img src="img/tanker-12-restored.jpg" alt=""><div class="cap">C-119 Tanker 12 coming in to the air attack base. From the family collection.</div><div class="no">14</div></div>
+          <div class="pg"><h4>Summers at the Ranch</h4><img src="img/nasa-dogs.jpg" alt=""><div class="cap">The summer of the NASA shirt, 1986.</div><div class="no">15</div></div>
+        </div>
+        <div class="thumbs"><i></i><i></i><i class="on"></i><i></i><i></i></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- MEMORY WALL + SHARING -->
+<section><div class="wrap">
+  <div class="head"><span class="eyebrow">Every photo has a story</span><h2>What will yours say?</h2><p>A photo shows what happened. The story tells you why it mattered.</p></div>
+  <div class="wall">
+    <div class="mem"><img src="img/rainbow-restored.jpg" alt="Two children pointing at a rainbow over a lake"><div class="body"><span class="yr">1982</span><h3>Chasing the rainbow</h3><div class="quote">“I still remember that rainbow. It truly felt like my sister and I could just reach out and grab it! It made the flooding seem not so bad after all…”</div><div class="by"><span class="mini-play"></span>In his own words</div></div></div>
+    <div class="mem"><img src="img/nasa-dogs.jpg" alt="A boy in a NASA shirt with three dogs by a fence"><div class="body"><span class="yr">1986</span><h3>The summer of the NASA shirt</h3><div class="quote">“That truly was the summer of the NASA shirt. I wore that shirt everywhere. NASA was the coolest thing I knew at that time.”</div><div class="by"><span class="mini-play"></span>In his own words</div></div></div>
+    <div class="mem"><img src="img/tanker-12.jpg" alt="A red and white C-119 air tanker on a runway"><div class="body"><span class="yr">1980s</span><h3>C-119 Tanker 12 coming in</h3><div class="quote">“I will never forget that C-119 coming onto the base with its engines roaring…”</div><div class="by"><span class="mini-play"></span>In his own words</div></div></div>
+  </div>
+
+  <div class="share">
+    <div><span class="eyebrow" style="color:#7fd3ff">Share the stories</span><h3>Share the stories, not just the photos</h3><p>Send a private link to the family. They can look through the archive on any phone, listen to the stories, and add memories of their own.</p></div>
+    <div class="people">
+      <div class="msg"><span style="background:#8a5bbb">AV</span><div><b>Ava</b>I'd never heard the Berlin story before. I played it three times!</div></div>
+      <div class="msg"><span style="background:#4f9a55">LI</span><div><b>Liam</b>Added 12 photos from Grandma's house, plus the story about the dogs.</div></div>
+      <div class="msg"><span style="background:#c6a43a">HA</span><div><b>Harper</b>Can we put the rainbow one in the reunion book?</div></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- WHO + HOW -->
+<section id="how" class="alt"><div class="wrap">
+  <div class="head"><span class="eyebrow">Who it's for</span><h2>For anyone keeping a history</h2></div>
+  <div class="aud">
+    <div><b>Families</b><span>Capture what Grandma and Grandpa remember while you still can.</span></div>
+    <div><b>New parents</b><span>Share the baby's first years with the family you choose, privately and with no ads.</span></div>
+    <div><b>Historical societies</b><span>Save the history of a town, a building or a group.</span></div>
+    <div><b>Memorials</b><span>Friends and family add their stories of someone they loved.</span></div>
+    <div><b>Senior living &amp; memory care</b><span>Reminisce with residents, and keep their voices for the family.</span></div>
+    <div><b>Veterans groups</b><span>Record first-hand accounts beside service photos.</span></div>
+    <div><b>Schools &amp; reunions</b><span>Many classmates remember the same picture.</span></div>
+    <div><b>Churches, clubs &amp; fire departments</b><span>Build an anniversary book from members' stories.</span></div>
+    <div><b>Genealogists</b><span>Keep documents and voices beside your family research.</span></div>
+  </div>
+  <div class="steps">
+    <div class="step"><h3>Install it in about 15 minutes</h3><p>Follow our short guide to add Phoenix Photo Archive to your own Google account. Your files never leave your Drive.</p></div>
+    <div class="step"><h3>Add your photos and papers</h3><p>Drop in pictures, scans, documents and videos. Label them with names, places and dates.</p></div>
+    <div class="step"><h3>Capture and share the stories</h3><p>Let family tell the memories behind each photo, then share the archive with everyone.</p></div>
+  </div>
+</div></section>
+
+<section id="pricing"><div class="wrap">
+  <div class="price-box">
+    <div><span class="eyebrow">Pricing</span><h2>Free during early access</h2><p>Every feature is free while we test Phoenix Photo Archive together. When paid plans arrive, they will be priced so every family can afford them, and early testers keep a founding-member discount.</p></div>
+    <div class="plan hi"><span class="tag">Now open</span><h3>Early access</h3><div class="price">$0</div><ul><li>Every feature, including voice stories</li><li>Unlimited photos (uses your own Drive space)</li><li>Founding-member pricing later</li><li>Help by feedback form, replies within a few business days</li></ul><a class="btn primary" href="../install/">Install free</a></div>
+  </div>
+</div></section>
+
+<section id="help" class="alt"><div class="wrap">
+  <div class="head"><span class="eyebrow">Help</span><h2>Questions and help</h2><p>Phoenix Photo Archive is a small independent business, not a big tech company. Support is by our <a class="feedback-link" href="#">feedback form</a>, and we reply within a few business days.</p></div>
+  <div class="faq">
+    <details open><summary>Do I need a Google account?</summary><p>Yes. Phoenix Photo Archive runs inside your own Google account and keeps everything in your Google Drive. A free Gmail account works.</p></details>
+    <details><summary>Google says the app "isn't verified." Is it safe?</summary><p>Yes. Phoenix Photo Archive installs as your own private copy inside your Google account, so Google shows this warning for it the same way it does for any personal project. Our <a href="../install/">install guide</a> shows each screen and which buttons to press. Your files stay in your Drive and are never sent to us.</p></details>
+    <details><summary>I'm stuck during installation. What should I do?</summary><p>Most problems come from skipping a step on Google's permission screens. Go back through the <a href="../install/">install guide</a> one screen at a time, and make sure you choose "Select all" when Google lists the permissions. Still stuck? Send us a note through the <a class="feedback-link" href="#">feedback form</a> with a screenshot, and we'll help.</p></details>
+    <details><summary>Something stopped working partway through a big upload.</summary><p>Free Google accounts have daily limits on how much work an app can do. If you add hundreds of photos at once, Phoenix Photo Archive may pause and pick up again later. Your photos are not lost. Try smaller batches, or wait a few hours and continue.</p></details>
+    <details><summary>Can I add videos?</summary><p>Yes, up to 2 GB per video. Because videos upload through your web browser into your Google Drive, a long video can take a while, and the page needs to stay open until it finishes. We recommend keeping videos short. Short clips upload faster, are easier for family to watch on a phone, and family members can download a copy from a shared link only when a video is under 40 MB (larger ones still play). For long home movies, trim out the best moments as shorter clips.</p></details>
+    <details><summary>Should I use my everyday Google account?</summary><p>We recommend creating a new, free Google account just for your archive. It gets the full 15 GB of free Google storage to itself (and you can add more later through Google One). It keeps your archive separate from your personal email, and you can hand the account to another family member someday.</p></details>
+    <details><summary>Can I move my archive to a different Google account?</summary><p>Yes, without starting over. Common reasons are combining family archives, switching accounts, or taking over a loved one's archive.</p><p><strong>To move it:</strong> use Google Drive's <em>Share → Transfer ownership</em> on the Phoenix Photo folder and every file in it, including the "Phoenix Photo database" spreadsheet. Then install Phoenix Photo Archive in the new account and send us a note through the <a class="feedback-link" href="#">feedback form</a>. For now we connect the moved archive for you, usually within a few business days. A one-click "connect an existing archive" option is planned. After a move, your archive has a new web address, so family members will need the new link and will sign in again.</p><p><strong>Backups are different from moves.</strong> A Google Takeout download is a complete backup, but re-uploading it creates new copies that can't be reconnected, so it would be a fresh start. Before you make one, use <em>Settings → Storage → Export everything</em> to save a readable spreadsheet of every detail, story and recording link alongside it.</p><p><strong>Planning ahead:</strong> Google's <em>Inactive Account Manager</em> (in your Google Account settings) lets you choose someone to receive a download of your files if your account goes unused. They get a full, readable copy of the photos, recordings and database, though it can't be reopened in Phoenix Photo Archive as a live archive. To pass on a working archive, transfer ownership while you can.</p></details>
+    <details><summary>Is there an app to download?</summary><p>No. It runs in your web browser on a computer, tablet or phone. You can add it to your phone's home screen like an app.</p></details>
+    <details><summary>Will editing change my original photos?</summary><p>Never. Your original photos, documents and recordings are kept exactly as you added them. Every crop, color fix or restore is saved as a separate version that you can undo at any time.</p></details>
+    <details><summary>Who can see my photos and stories?</summary><p>Only you and the people you share with. Everything stays in your Drive, and we never have a copy.</p></details>
+    <details><summary>Will my archive still be there in 20 years?</summary><p>Yes. Your photos, documents and recordings are ordinary files in your Google Drive, so they stay yours even if you stop using Phoenix Photo Archive.</p></details>
+  </div>
+</div></section>
+
+<section class="cta"><div class="wrap">
+  <img class="bird" src="img/phoenix-bird.svg" alt="">
+  <h2>Start your family's archive today</h2>
+  <p>Set it up in about 15 minutes. It's free during early access.</p>
+  <div class="cta-btns"><a class="btn primary" href="../install/">Install Phoenix Photo Archive free</a><a class="btn ghost feedback-link" href="#">Send feedback</a></div>
+  <p class="disclaimer"><strong>Good to know before you start:</strong> setting up Phoenix Photo Archive takes a little comfort with computers. You'll need a Google account, and you'll follow our step-by-step guide to copy the program into your Google Drive and approve Google's permission screens. It takes about 15 minutes on a computer. After that, using it is point-and-click on any device.</p>
+  <p class="tester">Testing Phoenix Photo Archive for us? Tell us what worked, what was confusing and what you'd add. It takes two minutes.</p>
+</div></section>
+
+<footer><div class="wrap">
+  <span class="logo"></span><span>© 2026 Phoenix Photo Archive. Phoenix Photo™. All rights reserved.</span>
+  <div class="sp"><a href="../install/">Install guide</a><a class="feedback-link" href="#">Feedback</a><a href="privacy/">Privacy</a><a href="terms/">Terms</a></div>
+</div></footer>
+
+<script>
+(function(){
+  // Feedback form address: set this once the Google Form exists
+  var FEEDBACK_URL="https://forms.gle/AHGvTaH8c3FbhdZHA";
+  document.querySelectorAll(".feedback-link").forEach(function(a){a.href=FEEDBACK_URL;if(FEEDBACK_URL!=="#"){a.target="_blank";a.rel="noopener"}});
+  // waveform bars (fixed pattern so it looks the same every time)
+  var w=document.getElementById('wave'),n=48,bars=[];
+  for(var i=0;i<n;i++){var h=18+Math.round(70*Math.abs(Math.sin(i*1.7)*Math.cos(i*.45)));var b=document.createElement('i');b.style.height=h+'%';w.appendChild(b);bars.push(b)}
+  var vb=document.getElementById('bars');
+  for(var j=0;j<22;j++){var e=document.createElement('i');e.style.height=(14+Math.round(46*Math.abs(Math.sin(j*1.3)*Math.cos(j*.5))))+'px';vb.appendChild(e)}
+  // story player: plays audio/berlin-1968.mp3 once it is added
+  var p=document.getElementById('player'),t=document.getElementById('ptime'),a=new Audio('audio/berlin-1968.mp3');
+  function fmt(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+  p.querySelector('button').onclick=function(){if(a.paused){a.play().catch(function(){t.textContent='Coming soon'})}else a.pause()};
+  a.onplay=function(){p.classList.add('playing')};a.onpause=a.onended=function(){p.classList.remove('playing')};
+  a.ontimeupdate=function(){var f=a.currentTime/(a.duration||37);bars.forEach(function(b,k){b.classList.toggle('on',k/n<f)});t.textContent=fmt((a.duration||37)-a.currentTime)};
+})();
+</script>
+</body>
+</html>

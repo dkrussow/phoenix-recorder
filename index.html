@@ -12,8 +12,8 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--ink);font:17px/1.45 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
-header{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line)}
-header img{width:30px;height:30px}
+header{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #08142b;background:linear-gradient(180deg,#1d3a78 0%,#132b5f 42%,#0b1a36 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 2px 8px rgba(0,0,0,.35)}
+header img{width:36px;height:auto}
 header b{font-size:16px}
 header span{color:var(--mute);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 main{display:grid;align-content:start;grid-template-columns:minmax(0,1.5fr) minmax(320px,1fr);gap:20px;padding:16px;max-width:1400px;margin:0 auto;min-height:calc(100% - 52px)}
@@ -27,10 +27,10 @@ label{display:block;font-weight:600;font-size:14px;margin:0 0 4px;color:var(--mu
 input{width:100%;font:inherit;font-size:17px;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);background:#0b1220;color:var(--ink)}
 input:focus{outline:none;border-color:var(--blue)}
 .box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.big{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:60px;border:0;border-radius:14px;font:700 19px inherit;font-family:inherit;color:#fff;background:var(--blue);cursor:pointer}
+.big{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:60px;border:0;border-radius:14px;font:700 19px inherit;font-family:inherit;color:#fff;background:linear-gradient(180deg,#3b80ff 0%,#0f5cff 50%,#0047e0 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.30),0 1px 3px rgba(0,0,0,.45);text-shadow:0 1px 0 rgba(0,0,0,.25);cursor:pointer}
 .big.rec{background:var(--red)}
 .big.go{background:var(--green)}
-.big.ghost{background:none;border:1.5px solid var(--line);color:var(--ink);font-weight:600;min-height:50px;font-size:17px}
+.big.ghost{background:none;box-shadow:none;text-shadow:none;border:1.5px solid var(--line);color:var(--ink);font-weight:600;min-height:50px;font-size:17px}
 .big:disabled{opacity:.55;cursor:default}
 .dot{width:16px;height:16px;border-radius:50%;background:#fff;flex:none}
 .recording .dot{animation:pulse 1s infinite}
@@ -41,6 +41,8 @@ input:focus{outline:none;border-color:var(--blue)}
 .meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),#e2c044,var(--red));transition:width .08s}
 audio{width:100%}
 .msg{font-size:15px;color:var(--mute)}
+.mic{font-size:15px;line-height:1.45;border-radius:10px;padding:10px 12px;background:rgba(255,207,112,.1);border:1px solid rgba(255,207,112,.45)}
+.mic.ok{background:rgba(80,200,120,.1);border-color:rgba(80,200,120,.45)}
 .err{color:#ff9b9e;font-weight:600}
 .ok{color:#7ee2a8;font-weight:700;font-size:19px}
 .prog{height:12px;border-radius:6px;background:#0b1220;overflow:hidden}
@@ -62,7 +64,7 @@ audio{width:100%}
 </style>
 </head>
 <body>
-<header><img src="phoenix-mark-120.png" alt=""><b>Phoenix Recorder</b><span id="arch"></span></header>
+<header><img src="brand/phoenix-bird.svg" alt=""><b>Phoenix Recorder</b><span id="arch"></span></header>
 <main>
   <div class="pic" id="pic" title="Tap to see it bigger"><div class="none" id="picMsg">Loading the photo…</div></div>
   <div class="side">
@@ -70,6 +72,7 @@ audio{width:100%}
     <div id="start" class="box" hidden>
       <div><label for="who">Your name</label><input id="who" autocomplete="name" placeholder="For example, Sam Ortega"></div>
       <div><label for="nm">Name this story (you can leave it empty)</label><input id="nm" placeholder="For example, The day we lost the engine"></div>
+      <div class="mic" id="micNote" role="status" hidden></div>
       <button class="big rec" id="recBtn"><span class="dot"></span>Start recording</button>
       <ul class="tips"><li>Look at the photo and talk about what you see and remember: who, where, when, and what happened.</li><li id="tipScreen">Keep this screen on while you talk.</li></ul>
     </div>
@@ -80,9 +83,9 @@ audio{width:100%}
       <div class="msg">Recording. Press Stop when you're done.</div>
     </div>
     <div id="review" class="box" hidden>
-      <div class="msg">Listen to it if you like, then send it.</div>
+      <div class="msg">Listen to it if you like, then post it.</div>
       <audio id="play" controls preload="metadata"></audio>
-      <button class="big go" id="sendBtn">Send my story</button>
+      <button class="big go" id="sendBtn">Post this story</button>
       <button class="big ghost" id="againBtn">Record it again</button>
     </div>
     <div id="sending" class="box" hidden>
@@ -131,6 +134,27 @@ audio{width:100%}
     if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return 'ios';
     if (/Android/.test(ua)) return 'android';
     return 'computer';
+  }
+  /** Before anyone presses Start: say whether the microphone is allowed, and how to turn it on if it is blocked. */
+  function micCheck() {
+    var el = $('micNote'), d = device();
+    try {
+      if (!navigator.permissions || !navigator.permissions.query) return;
+      navigator.permissions.query({ name: 'microphone' }).then(function (p) {
+        var upd = function () {
+          if (p.state === 'denied') {
+            el.className = 'mic'; el.hidden = false;
+            el.textContent = d === 'android' ? 'The microphone is blocked for this page. Tap the icon to the left of the web address, tap Permissions, turn on Microphone, then reload this page.'
+              : d === 'ios' ? 'The microphone is blocked for this page. Tap "aA" in the address bar, choose Website Settings, set Microphone to Allow, then reload this page.'
+              : 'The microphone is blocked for this page. Click the icon to the left of the web address, allow the microphone, then reload this page.';
+          } else if (p.state === 'prompt') {
+            el.className = 'mic'; el.hidden = false;
+            el.textContent = 'When you press Start recording, your ' + (d === 'computer' ? 'browser' : 'phone') + ' will ask to use the microphone. Choose Allow.';
+          } else { el.className = 'mic ok'; el.hidden = false; el.textContent = 'The microphone is ready.'; }
+        };
+        upd(); p.onchange = upd;
+      }).catch(function () { });
+    } catch (_) { }
   }
   function micHelp(x) {
     var n = x && x.name, d = device();
@@ -247,7 +271,7 @@ audio{width:100%}
     } else { $('picMsg').textContent = 'There is no picture for this item, but you can still record.'; $('pic').style.cursor = 'default'; }
     var saved = ''; try { saved = localStorage.getItem('ppRecWho') || ''; } catch (_) { }
     $('who').value = r.who || saved; if (r.name) $('nm').value = r.name;
-    show('start');
+    show('start'); micCheck();
     if (!pickType() && !window.MediaRecorder) fail('This browser cannot record. Please open this link in Chrome, Edge, Firefox or Safari.');
   }).catch(function (x) { $('picMsg').textContent = ''; $('ttl').textContent = 'The recorder could not open'; fail(x.message); });
 })();

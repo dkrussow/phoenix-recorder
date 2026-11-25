@@ -57,14 +57,19 @@ iframe.pp.on{visibility:visible}
   var TEST = /^(127\.0\.0\.1|localhost)$/.test(location.hostname) && q.get('exec');
   if (TEST) EXEC = q.get('exec');
   function keyOf(h) { h = String(h || '').replace(/^#/, ''); if (h === 'library') return 'library'; if (/^s\.[A-Za-z0-9]{4,16}$/.test(h)) return h; return 'story'; }
-  function plainUrl(k) { return EXEC + (k === 'library' ? '?page=library' : k === 'story' ? '?page=family' : '?share=' + k.slice(2)); }
+  function pickQ(extra) { return extra && extra.pick && extra.pick.length ? '&pick=' + extra.pick.join(',') + (extra.play ? '&play=1' : '') : ''; }
+  function plainUrl(k, extra) { return EXEC + (k === 'library' ? '?page=library' : k === 'story' ? '?page=family' + pickQ(extra) : '?share=' + k.slice(2)); }
   function frameUrl(k, extra) { return TEST ? EXEC + (k === 'library' ? 'App.html' : 'Share.html') + '?data=' + encodeURIComponent(JSON.stringify(Object.assign(k === 'library' ? { familyUrl: 'x' } : k === 'story' ? { family: true } : { shareId: k.slice(2) }, { inLauncher: true, launcher: location.origin }, extra && extra.pick ? { pick: extra.pick, play: !!extra.play } : {}))) + (q.get('u') ? '&u=' + encodeURIComponent(q.get('u')) : '')
-    : plainUrl(k) + '&in=launcher' + (extra && extra.pick ? '&pick=' + extra.pick.join(',') + (extra.play ? '&play=1' : '') : ''); }
+    : plainUrl(k, extra) + '&in=launcher'; }
 
   // A device where Google's page can't be framed gets the plain page (remembered for a week).
   var plainUntil = Number(lsGet('ppLaunchPlain') || 0);
   var start = keyOf(location.hash);
-  if (plainUntil > Date.now() && !TEST) { location.replace(plainUrl(start)); return; }
+  // Photos picked in a Library that isn't inside the app arrive in the address (?pick=1,2,3&play=1).
+  var startPick = (q.get('pick') || '').split(',').filter(function (x) { return /^\d{1,12}$/.test(x); }).map(Number).slice(0, 200);
+  var startExtra = start === 'story' && startPick.length ? { pick: startPick, play: q.get('play') === '1' } : null;
+  if (q.get('pick') || q.get('play')) { try { history.replaceState(null, '', location.pathname + '?a=' + encodeURIComponent(a) + (d ? '&d=' + encodeURIComponent(d) : '') + (TEST ? '&exec=' + encodeURIComponent(q.get('exec')) + (q.get('u') ? '&u=' + encodeURIComponent(q.get('u')) : '') : '') + location.hash); } catch (e) { } }
+  if (plainUntil > Date.now() && !TEST) { location.replace(plainUrl(start, startExtra)); return; }
 
   // The installed app (and an iPhone home-screen icon) start at this same address.
   try {
@@ -84,18 +89,18 @@ iframe.pp.on{visibility:visible}
     el.setAttribute('allow', 'microphone; fullscreen; clipboard-write; autoplay; camera');
     el.src = frameUrl(k, extra);
     document.body.appendChild(el);
-    F[k] = { el: el, win: null, origin: '', alive: false, tries: f ? f.tries : 0, timer: 0, title: '' };
+    F[k] = { el: el, win: null, origin: '', alive: false, tries: f ? f.tries : 0, timer: 0, title: '', extra: extra || null };
     watch(k); return F[k];
   }
   function watch(k) { var f = F[k]; clearTimeout(f.timer);
     f.timer = setTimeout(function () { if (f.alive) return;
       f.tries++;
-      if (f.tries === 1) { if (k === cur) say('Still opening…', 'Google is slow to answer. Trying again.'); make(k); return; }
+      if (f.tries === 1) { if (k === cur) say('Still opening…', 'Google is slow to answer. Trying again.'); make(k, f.extra); return; }
       if (k !== cur) return;
       // Second time: this device can't use the frame. Open the plain page instead, and remember that for a week.
       lsSet('ppLaunchPlain', String(Date.now() + 7 * 864e5));
       say('Opening the plain page…', 'This device works better without the app frame.');
-      if (!TEST) setTimeout(function () { location.replace(plainUrl(k)); }, 1200); else showButtons();
+      if (!TEST) setTimeout(function () { location.replace(plainUrl(k, f.extra)); }, 1200); else showButtons();
     }, 15000); }
   function say(h, p) { $('wait').hidden = false; $('wH').textContent = h; $('wP').textContent = p; }
   function showButtons() { $('wB').hidden = false; $('wS').hidden = true; $('plain').href = plainUrl(cur); }
@@ -141,7 +146,7 @@ iframe.pp.on{visibility:visible}
   addEventListener('appinstalled', function () { installEvt = null; Object.keys(F).forEach(function (x) { post(x, env()); }); });
   addEventListener('hashchange', function () { var k = keyOf(location.hash); if (k !== cur) show(k); });
   $('again').onclick = function () { $('wB').hidden = true; $('wS').hidden = false; lsSet('ppLaunchPlain', '0'); var f = F[cur]; if (f) f.tries = 0; make(cur); show(cur); };
-  show(start);
+  show(start, startExtra);
 })();
 </script>
 </body>

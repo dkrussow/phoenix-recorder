@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Phoenix Photo</title>
+<meta name="theme-color" content="#0b1d3b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Phoenix Photo">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="../phoenix-icon-192.png">
+<link rel="apple-touch-icon" href="../phoenix-icon-192.png">
+<style>
+:root{--bg:#0d1526;--panel:#16213a;--line:#2a3a5e;--ink:#eef2f9;--mute:#a9b8d6;--blue:#3d7bff}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#121317;color:var(--ink);font:17px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;overflow:hidden}
+iframe.pp{position:fixed;inset:0;width:100%;height:100%;border:0;background:#121317;visibility:hidden}
+iframe.pp.on{visibility:visible}
+#wait{position:fixed;inset:0;z-index:5;display:grid;place-items:center;background:linear-gradient(165deg,#0b1d3b 0%,#0d1526 60%);text-align:center;padding:24px 16px}
+#wait[hidden]{display:none}
+#wait img{width:84px;height:84px;border-radius:18px}
+#wait h1{font-size:22px;margin:14px 0 6px}
+#wait p{color:var(--mute);margin:8px auto;max-width:420px}
+.spin{width:28px;height:28px;margin:14px auto 0;border-radius:50%;border:3px solid #2a3a5e;border-top-color:var(--blue);animation:r 1s linear infinite}
+@keyframes r{to{transform:rotate(360deg)}}
+.btn{display:inline-block;margin:8px 4px 0;background:var(--blue);color:#fff;font-weight:700;font-size:17px;padding:12px 20px;border-radius:12px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn.sec{background:var(--panel);border:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div id="wait" role="status" aria-live="polite">
+  <div>
+    <img src="../phoenix-icon-192.png" alt="">
+    <h1 id="wH">Opening Phoenix Photo…</h1>
+    <p id="wP">One moment.</p>
+    <div class="spin" id="wS"></div>
+    <div id="wB" hidden><button class="btn" id="again" type="button">Try again</button> <a class="btn sec" id="plain" href="#">Open without the app frame</a></div>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+  // Phoenix Photo launcher. It holds the Google pages in frames so switching between the
+  // Library and the Story session is instant. Photos and data stay in Google; nothing is stored here
+  // except which archive to open (so the home-screen icon opens the right one).
+  var q = new URLSearchParams(location.search), LS = window.localStorage;
+  function lsGet(k) { try { return LS.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { LS.setItem(k, v); } catch (e) { } }
+  var a = q.get('a') || '', d = (q.get('d') || '').toLowerCase();
+  if (!a) { try { var saved = JSON.parse(lsGet('ppLaunch') || 'null'); if (saved) { a = saved.a || ''; d = saved.d || ''; } } catch (e) { } }
+  var okId = /^[A-Za-z0-9_-]{20,120}$/.test(a), okDom = !d || /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d);
+  var $ = function (id) { return document.getElementById(id); };
+  if (!okId || !okDom) { $('wS').hidden = true; $('wH').textContent = 'Open Phoenix Photo from your link'; $('wP').textContent = 'Use the link the family sent you the first time. After that, this icon remembers it.'; return; }
+  lsSet('ppLaunch', JSON.stringify({ a: a, d: d }));
+  var EXEC = 'https://script.google.com/' + (d ? 'a/macros/' + d : 'macros') + '/s/' + a + '/exec';
+  var TEST = /^(127\.0\.0\.1|localhost)$/.test(location.hostname) && q.get('exec');
+  if (TEST) EXEC = q.get('exec');
+  function keyOf(h) { h = String(h || '').replace(/^#/, ''); if (h === 'library') return 'library'; if (/^s\.[A-Za-z0-9]{4,16}$/.test(h)) return h; return 'story'; }
+  function plainUrl(k) { return EXEC + (k === 'library' ? '?page=library' : k === 'story' ? '?page=family' : '?share=' + k.slice(2)); }
+  function frameUrl(k, extra) { return TEST ? EXEC + (k === 'library' ? 'App.html' : 'Share.html') + '?data=' + encodeURIComponent(JSON.stringify(Object.assign(k === 'library' ? { familyUrl: 'x' } : k === 'story' ? { family: true } : { shareId: k.slice(2) }, { inLauncher: true, launcher: location.origin }, extra && extra.pick ? { pick: extra.pick, play: !!extra.play } : {}))) + (q.get('u') ? '&u=' + encodeURIComponent(q.get('u')) : '')
+    : plainUrl(k) + '&in=launcher' + (extra && extra.pick ? '&pick=' + extra.pick.join(',') + (extra.play ? '&play=1' : '') : ''); }
+
+  // A device where Google's page can't be framed gets the plain page (remembered for a week).
+  var plainUntil = Number(lsGet('ppLaunchPlain') || 0);
+  var start = keyOf(location.hash);
+  if (plainUntil > Date.now() && !TEST) { location.replace(plainUrl(start)); return; }
+
+  // The installed app (and an iPhone home-screen icon) start at this same address.
+  try {
+    var here = location.origin + location.pathname, su = here + '?a=' + encodeURIComponent(a) + (d ? '&d=' + encodeURIComponent(d) : '') + '#story';
+    var icon = new URL('../phoenix-icon-192.png', here).href, icon2 = new URL('../phoenix-icon-512.png', here).href;
+    var man = { name: 'Phoenix Photo', short_name: 'Phoenix Photo', start_url: su, scope: here, id: su, display: 'standalone', background_color: '#0b1d3b', theme_color: '#0b1d3b',
+      icons: [{ src: icon, sizes: '192x192', type: 'image/png' }, { src: icon2, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }] };
+    var ml = document.createElement('link'); ml.rel = 'manifest'; ml.href = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(man)); document.head.appendChild(ml);
+  } catch (e) { }
+
+  var F = {}, cur = '', installEvt = null;
+  var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || !!navigator.standalone;
+  var phone = (window.matchMedia && matchMedia('(pointer:coarse)').matches) || innerWidth < 820;
+  function make(k, extra) {
+    var f = F[k]; if (f && f.el) f.el.remove();
+    var el = document.createElement('iframe'); el.className = 'pp'; el.title = k === 'library' ? 'Phoenix Photo Library' : 'Phoenix Photo Story session';
+    el.setAttribute('allow', 'microphone; fullscreen; clipboard-write; autoplay; camera');
+    el.src = frameUrl(k, extra);
+    document.body.appendChild(el);
+    F[k] = { el: el, win: null, origin: '', alive: false, tries: f ? f.tries : 0, timer: 0, title: '' };
+    watch(k); return F[k];
+  }
+  function watch(k) { var f = F[k]; clearTimeout(f.timer);
+    f.timer = setTimeout(function () { if (f.alive) return;
+      f.tries++;
+      if (f.tries === 1) { if (k === cur) say('Still opening…', 'Google is slow to answer. Trying again.'); make(k); return; }
+      if (k !== cur) return;
+      // Second time: this device can't use the frame. Open the plain page instead, and remember that for a week.
+      lsSet('ppLaunchPlain', String(Date.now() + 7 * 864e5));
+      say('Opening the plain page…', 'This device works better without the app frame.');
+      if (!TEST) setTimeout(function () { location.replace(plainUrl(k)); }, 1200); else showButtons();
+    }, 15000); }
+  function say(h, p) { $('wait').hidden = false; $('wH').textContent = h; $('wP').textContent = p; }
+  function showButtons() { $('wB').hidden = false; $('wS').hidden = true; $('plain').href = plainUrl(cur); }
+  function post(k, m) { var f = F[k]; if (f && f.win && f.origin) { try { f.win.postMessage(m, f.origin); } catch (e) { } } }
+  function env() { return { pp: 'env', canInstall: !!installEvt && !standalone, standalone: standalone }; }
+  function show(k, extra) {
+    if (cur && cur !== k) post(cur, { pp: 'hidden' });
+    var prev = cur; cur = k;
+    var f = F[k];
+    if (!f) f = make(k, extra);
+    else if (extra && extra.pick) { if (f.alive) post(k, { pp: 'pick', ids: extra.pick, play: !!extra.play }); else f = make(k, extra); }
+    Object.keys(F).forEach(function (x) { F[x].el.classList.toggle('on', x === k); });
+    if (f.alive) { $('wait').hidden = true; post(k, { pp: 'shown' }); if (f.title) document.title = f.title; }
+    else { say('Opening Phoenix Photo…', k === 'library' ? 'Opening the Library.' : 'Opening the Story session.'); $('wB').hidden = true; $('wS').hidden = false; }
+    var h = k === 'story' ? '#story' : '#' + k; if (location.hash !== h) { try { history.replaceState(null, '', h); } catch (e) { } }
+    return prev;
+  }
+  var GU = /^https:\/\/[a-z0-9-]+-script\.googleusercontent\.com$/;
+  function frameOf(e) {
+    if (!(GU.test(e.origin) || (TEST && e.origin === location.origin))) return '';
+    var w = e.source; if (!w) return '';
+    for (var k in F) { var cw = F[k].el.contentWindow, x = w;
+      for (var n = 0; n < 4 && x; n++) { if (x === cw) return k; try { if (x === x.parent) break; x = x.parent; } catch (er) { break; } } }
+    return '';
+  }
+  addEventListener('message', function (e) {
+    var m = e.data; if (!m || typeof m.pp !== 'string') return;
+    var k = frameOf(e); if (!k) return;
+    var f = F[k];
+    if (m.pp === 'noframe') { lsSet('ppLaunchPlain', String(Date.now() + 7 * 864e5)); if (!TEST) location.replace(plainUrl(k)); return; }
+    if (m.pp === 'alive') { f.win = e.source; f.origin = e.origin; f.alive = true; f.tries = 0; clearTimeout(f.timer); post(k, env()); if (k === cur) { $('wait').hidden = true; } return; }
+    if (!f.win || e.source !== f.win) return;
+    if (m.pp === 'ready') { if (m.title) { f.title = String(m.title).slice(0, 120); if (k === cur) document.title = f.title; }
+      if (k === 'library' && /^(admin|editor)$/.test(String(m.role || '')) && !F.story && !phone) setTimeout(function () { if (!F.story) { make('story'); F.story.el.classList.toggle('on', cur === 'story'); } }, 3000);
+      return; }
+    if (m.pp === 'title') { f.title = String(m.text || '').slice(0, 120); if (k === cur) document.title = f.title; return; }
+    if (m.pp === 'go') { var to = m.to === 'library' ? 'library' : 'story', ids = Array.isArray(m.pick) ? m.pick.filter(function (n) { return Number.isInteger(n); }).slice(0, 200) : null;
+      show(to, ids && ids.length ? { pick: ids, play: !!m.play } : null); return; }
+    if (m.pp === 'reload') { make(k); if (k === cur) show(k); return; }
+    if (m.pp === 'install') { if (installEvt) { var ev = installEvt; installEvt = null; ev.prompt(); (ev.userChoice || Promise.resolve()).then(function () { Object.keys(F).forEach(function (x) { post(x, env()); }); }); } return; }
+  });
+  addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); installEvt = e; Object.keys(F).forEach(function (x) { post(x, env()); }); });
+  addEventListener('appinstalled', function () { installEvt = null; Object.keys(F).forEach(function (x) { post(x, env()); }); });
+  addEventListener('hashchange', function () { var k = keyOf(location.hash); if (k !== cur) show(k); });
+  $('again').onclick = function () { $('wB').hidden = true; $('wS').hidden = false; lsSet('ppLaunchPlain', '0'); var f = F[cur]; if (f) f.tries = 0; make(cur); show(cur); };
+  show(start);
+})();
+</script>
+</body>
+</html>
